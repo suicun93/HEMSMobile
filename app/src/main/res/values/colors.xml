@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      <color name="mauDo">#9065FF</color>
+      <color name="mauChuTitle">#DB7272</color>
+      <color name="vangNhat">#EFE4B0</color>
+      <color name="vang">#FFF100</color>
+
+      <color name="xanhNhat">#99D9EA</color>
+      <color name="xanhDam">#62A6CF</color>
+      <color name="nau">#BD8E03</color>
+      <color name="xam">#525252</color>
+      <color name="white">#EBFFFFFF</color>
+      <color name="daCamDam">#F38738</color>
+      <color name="trangNen">#8CFFFFFF</color>
+      <color name="hongNhat">#63EB8DAA</color>
+
+</resources>
