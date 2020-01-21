@@ -55,29 +55,20 @@ public class MainActivity extends AppCompatActivity {
 
       private void disableButtonUpdate() {
             // Disable button update to wait for 1 second.
-            new Thread(new Runnable() {
-                  @Override
-                  public void run() {
-                        runOnUiThread(new Runnable() {
-                              @Override
-                              public void run() {
-                                    btnUpdate.setText(R.string.updating);
-                                    btnUpdate.setEnabled(false);
-                              }
-                        });
-                        try {
-                              Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                              System.out.println("InterruptedException: " + e.getMessage());
-                        }
-                        runOnUiThread(new Runnable() {
-                              @Override
-                              public void run() {
-                                    btnUpdate.setText(R.string.update);
-                                    btnUpdate.setEnabled(true);
-                              }
-                        });
+            new Thread(() -> {
+                  runOnUiThread(() -> {
+                        btnUpdate.setText(R.string.updating);
+                        btnUpdate.setEnabled(false);
+                  });
+                  try {
+                        Thread.sleep(3000);
+                  } catch (InterruptedException e) {
+                        System.out.println("InterruptedException: " + e.getMessage());
                   }
+                  runOnUiThread(() -> {
+                        btnUpdate.setText(R.string.update);
+                        btnUpdate.setEnabled(true);
+                  });
             }).start();
       }
 
@@ -93,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
                   DevicesAdapter adapter = new DevicesAdapter();
                   adapter.btnUpdate = btnUpdate;
                   rvDevices.setAdapter(adapter);
+                  rvDevices.setOnFlingListener(new RecyclerView.OnFlingListener() {
+                        private static final int SWIPE_VELOCITY_THRESHOLD = 4000;
+
+                        @Override
+                        public boolean onFling(int velocityX, int velocityY) {
+                              if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
+                                    update();
+                                    return true;
+                              }
+                              return false;
+                        }
+                  });
                   rvDevices.setLayoutManager(new LinearLayoutManager(this));
             } else {
                   rvDevices.setVisibility(View.INVISIBLE);

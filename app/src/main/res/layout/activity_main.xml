@@ -16,8 +16,8 @@
       <TextView
             android:id="@+id/txtItemCount"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/vangNhat"
             android:gravity="center_vertical"
             android:paddingHorizontal="25dp"
@@ -31,8 +31,8 @@
 
       <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="0dp"
+            android:layout_weight="7">
 
             <ImageView
                   android:id="@+id/imageView"
@@ -54,27 +54,24 @@
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintTop_toTopOf="parent">
-
-            </androidx.recyclerview.widget.RecyclerView>
+                  app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:background="@color/xanhDam"
-            tools:layout_editor_absoluteY="640dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/xanhDam">
 
             <Button
                   android:id="@+id/button"
                   android:layout_width="wrap_content"
                   android:layout_height="42dp"
                   android:background="@drawable/mybutton"
+                  android:gravity="center"
                   android:padding="7dp"
                   android:text="@string/update"
-                  android:textColor="@color/mauDo"
                   android:textStyle="bold"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"

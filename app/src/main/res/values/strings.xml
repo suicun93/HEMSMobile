@@ -11,4 +11,13 @@
       <string name="operation_status_string">稼働状況: 分からない</string>
       <string name="instantaneous_string">瞬時値: 分からない</string>
       <string name="current_electric_string">現在の電気：分からない</string>
+      <string name="current_percentage_string">現在の割合: 分からない</string>
+      <string name="on">ON</string>
+      <string name="off">OFF</string>
+      <string name="time">時間</string>
+      <string name="state">充電状態</string>
+      <string name="instantaneous">瞬時値</string>
+      <string name="configure_txt">設定</string>
+      <string name="startTime">始まる時間</string>
+      <string name="endTime">終了時間</string>
 </resources>
