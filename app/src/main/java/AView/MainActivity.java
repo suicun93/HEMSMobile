@@ -1,9 +1,5 @@
 package AView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -13,6 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import Main.EchoController;
 
@@ -89,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public boolean onFling(int velocityX, int velocityY) {
-                              if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
-                                    update();
-                                    return true;
+                              if (btnUpdate.isEnabled()) {
+                                    if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
+                                          update();
+                                          return true;
+                                    }
                               }
                               return false;
                         }
