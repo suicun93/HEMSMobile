@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                   }
             });
 
-            // Update View after 5 seconds
+            // Update View after 3 seconds
             new Timer().schedule(new TimerTask() {
                   @Override
                   public void run() {
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                               }
                         });
                   }
-            }, 500, 3500);
+            }, 500, 3300);
       }
 
       private void disableButtonUpdateInSeveralSeconds() {
