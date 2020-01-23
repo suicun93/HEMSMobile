@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Common.Vibration;
 import Main.EchoController;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Button Update's onClick
             btnUpdate.setOnClickListener(v -> {
+                  Vibration.vibrate(this);
                   disableButtonUpdateInSeveralSeconds();
                   update();
             });
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                   public boolean onFling(int velocityX, int velocityY) {
                         if (btnUpdate.isEnabled()) {
                               if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
+                                    Vibration.vibrate(MainActivity.this);
                                     disableButtonUpdateInSeveralSeconds();
                                     update();
                                     return true;
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                               }
                         });
                   }
-            }, 500, 3300);
+            }, 500, 3000);
       }
 
       private void disableButtonUpdateInSeveralSeconds() {
