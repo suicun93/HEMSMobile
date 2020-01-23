@@ -118,18 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
       public void update() {
             // Reload list Devices.
-            if (!EchoController.listDevice().isEmpty()) {
-                  rvDevices.setVisibility(View.VISIBLE);
-                  notFoundFace.setVisibility(View.INVISIBLE);
-                  txtItemCount.setText(EchoController.listDevice().size() + " 台のデバイスが見つかりった。");
+            boolean listIsEmpty = EchoController.listDevice().isEmpty();
+            rvDevices.setVisibility(listIsEmpty ? View.INVISIBLE : View.VISIBLE);
+            notFoundFace.setVisibility(listIsEmpty ? View.VISIBLE : View.INVISIBLE);
 
+            if (!listIsEmpty) {
+                  txtItemCount.setText(EchoController.listDevice().size() + " 台のデバイスが見つかりった。");
                   // Update list Device
                   DevicesAdapter adapter = new DevicesAdapter();
                   rvDevices.setAdapter(adapter);
                   rvDevices.setLayoutManager(new LinearLayoutManager(this));
             } else {
-                  rvDevices.setVisibility(View.INVISIBLE);
-                  notFoundFace.setVisibility(View.VISIBLE);
                   txtItemCount.setText(R.string.default_title_no_item_found);
             }
       }
