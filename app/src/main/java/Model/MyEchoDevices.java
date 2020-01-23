@@ -5,10 +5,10 @@
  */
 package Model;
 
+import com.sonycsl.echo.eoj.device.DeviceObject;
+
 import AView.R;
 import Common.Key;
-
-import com.sonycsl.echo.eoj.device.DeviceObject;
 
 /**
  * @author hoang-trung-duc
@@ -91,7 +91,7 @@ public enum MyEchoDevices {
       UNKNOWN((short) 0x0000, "unkown") {
             @Override
             public int image() {
-                  return 0;
+                  return R.drawable.logo;
             }
       };
 
@@ -129,7 +129,7 @@ public enum MyEchoDevices {
       public int d3, e2, e4;
       public int e0, e1;
 
-      private MyEchoDevices(short classcode, String type) {
+      MyEchoDevices(short classcode, String type) {
             this.classcode = classcode;
             this.type = type;
             this.name = type;
