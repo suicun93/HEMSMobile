@@ -1,15 +1,14 @@
 package Receiver;
 
-import Common.Convert;
-
-import static Model.MyEchoDevices.EV;
-
-import Model.OperationMode;
-import Model.OperationStatus;
-
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.ElectricVehicle;
+
+import Common.Convert;
+import Model.OperationMode;
+import Model.OperationStatus;
+
+import static Model.MyEchoDevices.EV;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,7 +19,7 @@ import com.sonycsl.echo.eoj.device.housingfacilities.ElectricVehicle;
 /**
  * @author hoang-trung-duc
  */
-public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver {
+public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver implements ResultHandlable {
 
       @Override
       protected void onGetOperationStatus(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
@@ -78,19 +77,21 @@ public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver {
             }
       }
 
+      ResultHandle resultHandle;
+
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
-//        synchronized (out) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-//            if (success) {
-//                out.print("success");
-//            } else {
-//                out.print("{\n"
-//                        + "\"Failed\":\"" + "Wrong EPC,EDT" + "\"\n"
-//                        + "}");
-//            }
-//            out.notify();
+            if (success) {
+                  resultHandle.successRun();
+            } else {
+                  resultHandle.failRun();
+            }
             return result;
-//        }
+      }
+
+      @Override
+      public void setResultHandle(ResultHandle resultHandle) {
+            this.resultHandle = resultHandle;
       }
 }

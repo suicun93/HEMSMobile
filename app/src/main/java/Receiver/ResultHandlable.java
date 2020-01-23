@@ -1,0 +1,1 @@
+package Receiver;public interface ResultHandlable {      void setResultHandle(ResultHandle resultHandle);}

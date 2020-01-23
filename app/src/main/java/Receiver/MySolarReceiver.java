@@ -5,20 +5,19 @@
  */
 package Receiver;
 
-import Common.Convert;
-
-import static Model.MyEchoDevices.SOLAR;
-
-import Model.OperationStatus;
-
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.HouseholdSolarPowerGeneration;
 
+import Common.Convert;
+import Model.OperationStatus;
+
+import static Model.MyEchoDevices.SOLAR;
+
 /**
  * @author hoang-trung-duc
  */
-public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver {
+public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver implements ResultHandlable {
 
       @Override
       protected void onGetOperationStatus(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
@@ -54,19 +53,21 @@ public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver {
 
       }
 
+      ResultHandle resultHandle;
+
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
-//        synchronized (out) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-//            if (success) {
-//                out.print("success");
-//            } else {
-//                out.print("{\n"
-//                        + "\"Failed\":\"" + "Wrong EPC,EDT" + "\"\n"
-//                        + "}");
-//            }
-//            out.notify();
+            if (success) {
+                  resultHandle.successRun();
+            } else {
+                  resultHandle.failRun();
+            }
             return result;
-//        }
+      }
+
+      @Override
+      public void setResultHandle(ResultHandle resultHandle) {
+            this.resultHandle = resultHandle;
       }
 }
