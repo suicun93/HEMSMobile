@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
                   rvDevices.setVisibility(View.INVISIBLE);
                   notFoundFace.setVisibility(View.VISIBLE);
                   txtItemCount.setText(R.string.default_title_no_item_found);
-
-                  Toast.makeText(this, R.string.default_title_no_item_found, Toast.LENGTH_LONG).show();
             }
       }
 }
