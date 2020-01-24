@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import Common.Vibration;
 import Main.EchoController;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Button Update's onClick
             btnUpdate.setOnClickListener(v -> {
-                  Vibration.vibrate(this);
+                  v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                   disableButtonUpdateInSeveralSeconds();
                   update();
             });
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                   public boolean onFling(int velocityX, int velocityY) {
                         if (btnUpdate.isEnabled()) {
                               if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
-                                    Vibration.vibrate(MainActivity.this);
+                                    rvDevices.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                                     disableButtonUpdateInSeveralSeconds();
                                     update();
                                     return true;
