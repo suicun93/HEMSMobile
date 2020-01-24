@@ -8,7 +8,6 @@ package Model;
 import com.sonycsl.echo.eoj.device.DeviceObject;
 
 import AView.R;
-import Common.Key;
 
 /**
  * @author hoang-trung-duc
@@ -19,39 +18,11 @@ public enum MyEchoDevices {
             public int image() {
                   return R.drawable.ev;
             }
-
-            @Override
-            public String toString() {
-                  return "      \"" + type + "\":{ \n"
-                            + "         \"" + Key.Name + "\":\"" + name + "\",\n"
-                            + "         \"" + Key.EOJ + "\":\"" + String.format("0x%04x", classcode) + "\",\n"
-                            + "         \"" + Key.MacAddress + "\":\"" + address + "\",\n"
-                            + "         \"" + Key.OperationStatus + "\" : \"" + operationStatus.name() + "\",\n"
-                            + "         \"" + Key.OperationMode + "\" : \"" + operationMode.name() + "\",\n"
-                            + "         \"" + Key.ChargeDischargeElectricEnergy + "\" : \"" + d3 + "\",\n"
-                            + "         \"" + Key.RemainingElectric1 + "\" : \"" + e2 + "\",\n"
-                            + "         \"" + Key.RemainingElectric3 + "\" : \"" + e4 + "\"\n"
-                            + "      }\n";
-            }
       },
       BATTERY((short) 0x027D, "battery") {
             @Override
             public int image() {
                   return R.drawable.battery;
-            }
-
-            @Override
-            public String toString() {
-                  return "      \"" + type + "\":{ \n"
-                            + "         \"" + Key.Name + "\":\"" + name + "\",\n"
-                            + "         \"" + Key.EOJ + "\":\"" + String.format("0x%04x", classcode) + "\",\n"
-                            + "         \"" + Key.MacAddress + "\":\"" + address + "\",\n"
-                            + "         \"" + Key.OperationStatus + "\" : \"" + operationStatus.name() + "\",\n"
-                            + "         \"" + Key.OperationMode + "\" : \"" + operationMode.name() + "\",\n"
-                            + "         \"" + Key.ChargeDischargeElectricEnergy + "\" : \"" + d3 + "\",\n"
-                            + "         \"" + Key.RemainingElectric1 + "\" : \"" + e2 + "\",\n"
-                            + "         \"" + Key.RemainingElectric3 + "\" : \"" + e4 + "\"\n"
-                            + "      }\n";
             }
       },
       SOLAR((short) 0x0279, "solar") {
@@ -59,36 +30,14 @@ public enum MyEchoDevices {
             public int image() {
                   return R.drawable.solar;
             }
-
-            @Override
-            public String toString() {
-                  return "      \"" + type + "\":{ \n"
-                            + "         \"" + Key.Name + "\":\"" + name + "\",\n"
-                            + "         \"" + Key.EOJ + "\":\"" + String.format("0x%04x", classcode) + "\",\n"
-                            + "         \"" + Key.MacAddress + "\":\"" + address + "\",\n"
-                            + "         \"" + Key.OperationStatus + "\" : \"" + operationStatus.name() + "\",\n"
-                            + "         \"" + Key.InstantaneousAmountOfElectricityGenerated + "\" : \"" + e0 + "\",\n"
-                            + "         \"" + Key.AmountOfElectricityGenerated + "\" : \"" + e1 + "\"\n"
-                            + "      }\n";
-            }
       },
       LIGHT((short) 0x0290, "light") {
             @Override
             public int image() {
                   return R.drawable.light;
             }
-
-            @Override
-            public String toString() {
-                  return "      \"" + type + "\":{ \n"
-                            + "         \"" + Key.Name + "\":\"" + name + "\",\n"
-                            + "         \"" + Key.EOJ + "\":\"" + String.format("0x%04x", classcode) + "\",\n"
-                            + "         \"" + Key.MacAddress + "\":\"" + address + "\",\n"
-                            + "         \"" + Key.OperationStatus + "\" : \"" + operationStatus.name() + "\"\n"
-                            + "      }\n";
-            }
       },
-      UNKNOWN((short) 0x0000, "unkown") {
+      UNKNOWN((short) 0x0000, "unknown") {
             @Override
             public int image() {
                   return R.drawable.logo;
