@@ -76,21 +76,19 @@ public class MyBatteryReceiver extends Battery.Receiver implements ResultHandlab
             }
       }
 
-      ResultHandle resultHandle;
+
+      public Handlable handlable;
 
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-            if (success) {
-                  resultHandle.successRun();
-            } else {
-                  resultHandle.failRun();
-            }
+            handlable.handle(success);
             return result;
       }
 
       @Override
-      public void setResultHandle(ResultHandle resultHandle) {
-            this.resultHandle = resultHandle;
+      public void setResultHandle(Handlable handlable) {
+            this.handlable = handlable;
       }
+
 }

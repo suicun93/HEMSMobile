@@ -1,0 +1,1 @@
+package Receiver;public interface Handlable {      void handle(boolean success);}
