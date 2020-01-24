@@ -1,5 +1,5 @@
 ﻿#Giới thiệu
-[TOCM]
+ [TOCM]
 # HEMS Mobile
 Vào khoảng 2019-2020, mình đã qua Nhật làm việc 1 thời gian
 Ở đây thì mình làm việc trong dự án HEMS.
@@ -14,3 +14,5 @@ Mình cũng khá đam mê **C** nên làm quen khá nhanh, tuy nhiên viết b�
 Sau đó mình được giới thiệu thư viện [**OpenECHO**](https://github.com/SonyCSL/OpenECHO#openecho "**OpenECHO**") của các anh Sony, viết sẵn bằng Java thì nhàn hơn.
 
 ![Notitle](Sample Image/UI.jpg "Notitle")
+Thôi để viết sau vậy
+hết giờ rồi mình đi về đã.
