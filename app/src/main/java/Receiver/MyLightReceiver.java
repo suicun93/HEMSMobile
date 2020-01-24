@@ -29,17 +29,17 @@ public class MyLightReceiver extends GeneralLighting.Receiver implements ResultH
             }
       }
 
-      public Handlable handlable;
+      public OnSuccess OnSuccess;
 
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-            handlable.handle(success);
+            OnSuccess.handleResult(success);
             return result;
       }
 
       @Override
-      public void setResultHandle(Handlable handlable) {
-            this.handlable = handlable;
+      public void setResultHandle(OnSuccess OnSuccess) {
+            this.OnSuccess = OnSuccess;
       }
 }

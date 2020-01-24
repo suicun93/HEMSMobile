@@ -1,1 +1,1 @@
-package Receiver;public interface ResultHandlable {      void setResultHandle(Handlable Handlable);}
+package Receiver;public interface ResultHandlable {      void setResultHandle(OnSuccess OnSuccess);}
