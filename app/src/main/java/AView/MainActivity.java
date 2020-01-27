@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,7 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Common.Constants;
 import Main.EchoController;
+
+import static android.view.HapticFeedbackConstants.VIRTUAL_KEY;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
       private RecyclerView rvDevices;
       private Button btnUpdate = null;
       private TextView txtItemCount = null;
-      // Save state
-      private Parcelable recyclerViewState;
+
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +52,22 @@ public class MainActivity extends AppCompatActivity {
             btnUpdate = findViewById(R.id.button);
             txtItemCount = findViewById(R.id.txtItemCount);
             // </editor-fold>
-            // Start Controller and Update
-            try {
-                  EchoController.startController();
-            } catch (Exception e) {
-                  Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-                  return;
+
+            // Start Controller and Update (On some new OSs, we can not run network thread on main UI -> run on another thread.)
+            new Thread(this::startController).start();
+
+            // Wait for controller starting
+            synchronized (EchoController.class) {
+                  try {
+                        EchoController.class.wait(Constants.TIME_OUT);
+                  } catch (Exception e) {
+                        this.alertCannotStartController();
+                        return;
+                  }
             }
 
-            // Button Update's onClick
-            btnUpdate.setOnClickListener(v -> {
-                  v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                  disableButtonUpdateInSeveralSeconds();
-                  update();
-            });
+            // Button Update's onUpdatingFromView
+            btnUpdate.setOnClickListener(this::onUpdatingFromView);
 
             // Reload when scroll down
             rvDevices.setOnFlingListener(new RecyclerView.OnFlingListener() {
@@ -72,14 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
                   @Override
                   public boolean onFling(int velocityX, int velocityY) {
-                        if (btnUpdate.isEnabled()) {
+                        if (btnUpdate.isEnabled())
                               if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
-                                    rvDevices.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                    disableButtonUpdateInSeveralSeconds();
-                                    update();
+                                    MainActivity.this.onUpdatingFromView(rvDevices);
                                     return true;
                               }
-                        }
                         return false;
                   }
             });
@@ -88,26 +88,37 @@ public class MainActivity extends AppCompatActivity {
             new Timer().schedule(new TimerTask() {
                   @Override
                   public void run() {
-                        runOnUiThread(() -> {
-                              if (rvDevices.getLayoutManager() != null) {
-                                    recyclerViewState = rvDevices.getLayoutManager().onSaveInstanceState();
-                              }
-                              update();
-                              if (recyclerViewState != null) {
-                                    rvDevices.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-                              }
-                        });
+                        runOnUiThread(MainActivity.this::update);
                   }
             }, 500, 3000);
+      }
+
+      private void startController() {
+            synchronized (EchoController.class) {
+                  try {
+                        EchoController.startController();
+                        EchoController.class.notify();
+                  } catch (Exception e) {
+                        runOnUiThread(this::alertCannotStartController);
+                  }
+            }
+      }
+
+      private void alertCannotStartController() {
+            Toast.makeText(this, R.string.cannot_start_controller, Toast.LENGTH_LONG).show();
+      }
+
+      private void onUpdatingFromView(View v) {
+            v.performHapticFeedback(VIRTUAL_KEY);
+            disableButtonUpdateInSeveralSeconds();
+            update();
       }
 
       private void disableButtonUpdateInSeveralSeconds() {
             // Disable button update to wait for 2 second.
             int delay = 2000;
-            runOnUiThread(() -> {
-                  btnUpdate.setText(R.string.updating);
-                  btnUpdate.setEnabled(false);
-            });
+            btnUpdate.setText(R.string.updating);
+            btnUpdate.setEnabled(false);
             new Timer().schedule(new TimerTask() {
                   @Override
                   public void run() {
@@ -119,20 +130,24 @@ public class MainActivity extends AppCompatActivity {
             }, delay);
       }
 
-      public void update() {
+      private void update() {
             // Reload list Devices.
             boolean listIsEmpty = EchoController.listDevice().isEmpty();
             rvDevices.setVisibility(listIsEmpty ? View.INVISIBLE : View.VISIBLE);
             notFoundFace.setVisibility(listIsEmpty ? View.VISIBLE : View.INVISIBLE);
-
+            // Save state
+            Parcelable recyclerViewState = null;
+            if (rvDevices.getLayoutManager() != null)
+                  recyclerViewState = rvDevices.getLayoutManager().onSaveInstanceState();
             if (!listIsEmpty) {
-                  txtItemCount.setText(EchoController.listDevice().size() + " 台のデバイスが見つかりった。");
+                  txtItemCount.setText(EchoController.listDevice().size() + getString(R.string.number_devices_found));
                   // Update list Device
                   DevicesAdapter adapter = new DevicesAdapter();
                   rvDevices.setAdapter(adapter);
                   rvDevices.setLayoutManager(new LinearLayoutManager(this));
-            } else {
-                  txtItemCount.setText(R.string.default_title_no_item_found);
-            }
+            } else txtItemCount.setText(R.string.default_title_no_item_found);
+            // Restore state
+            if (recyclerViewState != null)
+                  rvDevices.getLayoutManager().onRestoreInstanceState(recyclerViewState);
       }
 }

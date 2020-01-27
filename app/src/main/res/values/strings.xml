@@ -20,4 +20,16 @@
       <string name="configure_txt">設定</string>
       <string name="startTime">始まる時間</string>
       <string name="endTime">終了時間</string>
+      <string name="cannot_start_controller">コントローラを起動できません</string>
+      <string name="number_devices_found">台のデバイスが見つかりった。</string>
+      <string name="select_btn">選択する</string>
+      <string name="cancel_btn">キャンセル</string>
+      <string name="device_disconnected">デバイスが切断されました。</string>
+      <string name="unknown">分からない</string>
+      <string name="reenter_time">時間を再入力してください</string>
+      <string name="reenter_instantaneous_value">瞬時値を再入力してください</string>
+      <string name="set_epc_success">正常に設定た</string>
+      <string name="set_epc_fail">設定に失敗た</string>
+      <string name="data_out_of_range">データが範囲外です。</string>
+      <string name="data_invalid">無効なデータです。</string>
 </resources>
