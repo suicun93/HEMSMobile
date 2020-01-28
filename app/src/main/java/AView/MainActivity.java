@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
       private RecyclerView rvDevices;
       private Button btnUpdate = null;
       private TextView txtItemCount = null;
-
+      private SwipeRefreshLayout pullToRefresh;
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             rvDevices = findViewById(R.id.listView);
             btnUpdate = findViewById(R.id.button);
             txtItemCount = findViewById(R.id.txtItemCount);
+            pullToRefresh = findViewById(R.id.refresh);
+
             // </editor-fold>
 
             // Start Controller and Update (On some new OSs, we can not run network thread on main UI -> run on another thread.)
@@ -66,23 +69,9 @@ public class MainActivity extends AppCompatActivity {
                   }
             }
 
-            // Button Update's onUpdatingFromView
-            btnUpdate.setOnClickListener(this::onUpdatingFromView);
-
-            // Reload when scroll down
-            rvDevices.setOnFlingListener(new RecyclerView.OnFlingListener() {
-                  private static final int SWIPE_VELOCITY_THRESHOLD = 4000;
-
-                  @Override
-                  public boolean onFling(int velocityX, int velocityY) {
-                        if (btnUpdate.isEnabled())
-                              if (velocityY < (-1) * SWIPE_VELOCITY_THRESHOLD) {
-                                    MainActivity.this.onUpdatingFromView(rvDevices);
-                                    return true;
-                              }
-                        return false;
-                  }
-            });
+            // Refresh when scroll down
+            pullToRefresh.setColorScheme(R.color.xanh_nhat, R.color.mau_chu_title);
+            pullToRefresh.setOnRefreshListener(() -> onUpdatingFromView(pullToRefresh));
 
             // Update View after 3 seconds
             new Timer().schedule(new TimerTask() {
@@ -108,46 +97,47 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.cannot_start_controller, Toast.LENGTH_LONG).show();
       }
 
-      private void onUpdatingFromView(View v) {
+      public void onUpdatingFromView(View v) {
             v.performHapticFeedback(VIRTUAL_KEY);
-            disableButtonUpdateInSeveralSeconds();
-            update();
-      }
-
-      private void disableButtonUpdateInSeveralSeconds() {
             // Disable button update to wait for 2 second.
             int delay = 2000;
             btnUpdate.setText(R.string.updating);
             btnUpdate.setEnabled(false);
+            pullToRefresh.setNestedScrollingEnabled(false);
             new Timer().schedule(new TimerTask() {
                   @Override
                   public void run() {
                         runOnUiThread(() -> {
                               btnUpdate.setText(R.string.update);
                               btnUpdate.setEnabled(true);
+                              pullToRefresh.setRefreshing(false);
+                              pullToRefresh.setNestedScrollingEnabled(true);
                         });
                   }
             }, delay);
+            // Update information
+            if (rvDevices.getAdapter() != null) rvDevices.getAdapter().notifyDataSetChanged();
       }
 
       private void update() {
-            // Reload list Devices.
+            // Reload whole of list Devices.
             boolean listIsEmpty = EchoController.listDevice().isEmpty();
             rvDevices.setVisibility(listIsEmpty ? View.INVISIBLE : View.VISIBLE);
             notFoundFace.setVisibility(listIsEmpty ? View.VISIBLE : View.INVISIBLE);
-            // Save state
-            Parcelable recyclerViewState = null;
-            if (rvDevices.getLayoutManager() != null)
-                  recyclerViewState = rvDevices.getLayoutManager().onSaveInstanceState();
+
             if (!listIsEmpty) {
                   txtItemCount.setText(EchoController.listDevice().size() + getString(R.string.number_devices_found));
                   // Update list Device
+                  // Save state
+                  Parcelable recyclerViewState = null;
+                  if (rvDevices.getLayoutManager() != null)
+                        recyclerViewState = rvDevices.getLayoutManager().onSaveInstanceState();
                   DevicesAdapter adapter = new DevicesAdapter();
                   rvDevices.setAdapter(adapter);
                   rvDevices.setLayoutManager(new LinearLayoutManager(this));
+                  // Restore state
+                  if (recyclerViewState != null)
+                        rvDevices.getLayoutManager().onRestoreInstanceState(recyclerViewState);
             } else txtItemCount.setText(R.string.default_title_no_item_found);
-            // Restore state
-            if (recyclerViewState != null)
-                  rvDevices.getLayoutManager().onRestoreInstanceState(recyclerViewState);
       }
 }

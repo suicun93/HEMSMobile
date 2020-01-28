@@ -4,7 +4,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/xanhNhat"
+      android:background="@color/xanh_nhat"
       android:orientation="vertical"
       android:weightSum="9"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -18,12 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/vangNhat"
+            android:background="@color/vang_nhat"
             android:gravity="center_vertical"
             android:paddingHorizontal="25dp"
             android:paddingTop="13dp"
             android:text="@string/default_title_no_item_found"
-            android:textColor="@color/mauChuTitle"
+            android:textColor="@color/mau_chu_title"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
             app:fontFamily="sans-serif-condensed-medium"
@@ -46,15 +46,21 @@
                   app:layout_constraintTop_toTopOf="parent"
                   app:srcCompat="@drawable/not_found_face" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                  android:id="@+id/listView"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                  android:id="@+id/refresh"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:visibility="invisible"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+                  app:layout_constraintTop_toTopOf="parent">
+
+                  <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"></androidx.recyclerview.widget.RecyclerView>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,14 +68,15 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/xanhDam">
+            android:background="@color/xanh_dam">
 
             <Button
                   android:id="@+id/button"
                   android:layout_width="wrap_content"
                   android:layout_height="42dp"
-                  android:background="@drawable/mybutton"
+                  android:background="@drawable/my_button"
                   android:gravity="center"
+                  android:onClick="onUpdatingFromView"
                   android:padding="7dp"
                   android:text="@string/update"
                   android:textStyle="bold"
