@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Refresh when scroll down
-            pullToRefresh.setColorScheme(R.color.xanh_nhat, R.color.mau_chu_title);
+            pullToRefresh.setColorSchemeResources(R.color.xanh_nhat, R.color.mau_chu_title, R.color.white);
+            pullToRefresh.setProgressBackgroundColorSchemeResource(R.color.trang_nen);
             pullToRefresh.setOnRefreshListener(() -> onUpdatingFromView(pullToRefresh));
 
             // Update View after 3 seconds
@@ -126,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
             notFoundFace.setVisibility(listIsEmpty ? View.VISIBLE : View.INVISIBLE);
 
             if (!listIsEmpty) {
-                  txtItemCount.setText(EchoController.listDevice().size() + getString(R.string.number_devices_found));
+                  String itemFound = EchoController.listDevice().size() + getString(R.string.number_devices_found);
+                  txtItemCount.setText(itemFound);
                   // Update list Device
                   // Save state
                   Parcelable recyclerViewState = null;
