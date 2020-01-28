@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Get View
-            notFoundFace = findViewById(R.id.imageView);
-            rvDevices = findViewById(R.id.listView);
-            btnUpdate = findViewById(R.id.button);
-            txtItemCount = findViewById(R.id.txtItemCount);
+            notFoundFace = findViewById(R.id.image_view);
+            rvDevices = findViewById(R.id.list_view);
+            btnUpdate = findViewById(R.id.btn_update);
+            txtItemCount = findViewById(R.id.txt_item_count);
             pullToRefresh = findViewById(R.id.refresh);
 
             // </editor-fold>
@@ -104,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             int delay = 2000;
             btnUpdate.setText(R.string.updating);
             btnUpdate.setEnabled(false);
-            pullToRefresh.setNestedScrollingEnabled(false);
+            if (v.getId() == R.id.btn_update)
+                  pullToRefresh.setEnabled(false);
             new Timer().schedule(new TimerTask() {
                   @Override
                   public void run() {
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                               btnUpdate.setText(R.string.update);
                               btnUpdate.setEnabled(true);
                               pullToRefresh.setRefreshing(false);
-                              pullToRefresh.setNestedScrollingEnabled(true);
+                              pullToRefresh.setEnabled(true);
                         });
                   }
             }, delay);

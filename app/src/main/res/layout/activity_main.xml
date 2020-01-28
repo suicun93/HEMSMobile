@@ -14,14 +14,17 @@
       tools:context=".MainActivity">
 
       <TextView
-            android:id="@+id/txtItemCount"
+            android:id="@+id/txt_item_count"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/vang_nhat"
             android:gravity="center_vertical"
-            android:paddingHorizontal="25dp"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
             android:paddingTop="13dp"
+            android:paddingEnd="25dp"
+            android:paddingRight="25dp"
             android:text="@string/default_title_no_item_found"
             android:textColor="@color/mau_chu_title"
             android:textSize="@dimen/title_text_size"
@@ -35,7 +38,7 @@
             android:layout_weight="7">
 
             <ImageView
-                  android:id="@+id/imageView"
+                  android:id="@+id/image_view"
                   android:layout_width="280dp"
                   android:layout_height="280dp"
                   android:contentDescription="@string/todo"
@@ -56,10 +59,10 @@
                   app:layout_constraintTop_toTopOf="parent">
 
                   <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/listView"
+                        android:id="@+id/list_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"></androidx.recyclerview.widget.RecyclerView>
+                        android:visibility="invisible" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
       </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,7 +74,7 @@
             android:background="@color/xanh_dam">
 
             <Button
-                  android:id="@+id/button"
+                  android:id="@+id/btn_update"
                   android:layout_width="wrap_content"
                   android:layout_height="42dp"
                   android:background="@drawable/my_button"
