@@ -19,7 +19,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import Common.Constants;
 import Main.EchoController;
 
 import static android.view.HapticFeedbackConstants.VIRTUAL_KEY;
@@ -59,16 +58,6 @@ public class MainActivity extends AppCompatActivity {
             // Start Controller and Update (On some new OSs, we can not run network thread on main UI -> run on another thread.)
             new Thread(this::startController).start();
 
-            // Wait for controller starting
-            synchronized (EchoController.class) {
-                  try {
-                        EchoController.class.wait(Constants.TIME_OUT);
-                  } catch (Exception e) {
-                        this.alertCannotStartController();
-                        return;
-                  }
-            }
-
             // Refresh when scroll down
             pullToRefresh.setColorSchemeResources(R.color.xanh_nhat, R.color.mau_chu_title, R.color.white);
             pullToRefresh.setProgressBackgroundColorSchemeResource(R.color.trang_nen);
@@ -84,21 +73,14 @@ public class MainActivity extends AppCompatActivity {
       }
 
       private void startController() {
-            synchronized (EchoController.class) {
-                  try {
-                        EchoController.startController();
-                        EchoController.class.notify();
-                  } catch (Exception e) {
-                        runOnUiThread(this::alertCannotStartController);
-                  }
+            try {
+                  EchoController.startController();
+            } catch (Exception e) {
+                  runOnUiThread(Toast.makeText(MainActivity.this, R.string.cannot_start_controller, Toast.LENGTH_LONG)::show);
             }
       }
 
-      private void alertCannotStartController() {
-            Toast.makeText(this, R.string.cannot_start_controller, Toast.LENGTH_LONG).show();
-      }
-
-      public void onUpdatingFromView(View v) {
+      public void onUpdatingFromView(View v) { // Just only update information, not update list devices
             v.performHapticFeedback(VIRTUAL_KEY);
             // Disable button update to wait for 2 second.
             int delay = 2000;
