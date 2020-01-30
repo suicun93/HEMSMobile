@@ -3,17 +3,17 @@
       <string name="update">更新</string>
       <string name="updating">ちょっと待ってくだいさい</string>
       <string name="default_title_no_item_found">デバイスが見つかりません</string>
-      <string name="todo">TODO</string>
+      <string name="todo" translatable="false">TODO</string>
       <string name="device_name">デバイス</string>
-      <string name="device_image">Device image</string>
+      <string name="device_image" translatable="false">Device image</string>
       <string name="ip_address_string">IP住所: 分からない</string>
       <string name="operation_mode_string">充電モード: 分からない</string>
       <string name="operation_status_string">稼働状況: 分からない</string>
       <string name="instantaneous_string">瞬時値: 分からない</string>
       <string name="current_electric_string">現在の電気：分からない</string>
       <string name="current_percentage_string">現在の割合: 分からない</string>
-      <string name="on">ON</string>
-      <string name="off">OFF</string>
+      <string name="on" translatable="false">ON</string>
+      <string name="off" translatable="false">OFF</string>
       <string name="time">時間</string>
       <string name="state">充電状態</string>
       <string name="instantaneous">瞬時値</string>
