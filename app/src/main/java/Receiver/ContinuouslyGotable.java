@@ -1,0 +1,1 @@
+package Receiver;public interface ContinuouslyGotable {      void startContinuousTask();      void stopContinuousTask();}

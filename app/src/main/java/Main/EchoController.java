@@ -1,24 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Main;
 
-import android.util.Property;
+import android.util.Log;
 
-import static Model.MyEchoDevices.EV;
-import static Model.MyEchoDevices.BATTERY;
-import static Model.MyEchoDevices.SOLAR;
-import static Model.MyEchoDevices.LIGHT;
-
+import Common.Constants;
 import Receiver.MyBatteryReceiver;
 import Receiver.MyEchoEventListener;
 import Receiver.MyElectricVehicleReceiver;
 import Receiver.MyLightReceiver;
 import Receiver.MyNodeProfileReceiver;
 import Receiver.MySolarReceiver;
-import Receiver.ResultHandlable;
 
 import com.sonycsl.echo.Echo;
 import com.sonycsl.echo.EchoProperty;
@@ -35,7 +25,7 @@ import com.sonycsl.echo.processing.defaults.DefaultNodeProfile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.TimerTask;
 
 /**
  * @author hoang-trung-duc
@@ -62,18 +52,39 @@ public class EchoController {
                         return; // Skip
                   }
                   listDevice.add(device);
-                  if (onGetEPC != null)
-                        onGetEPC.handleResult(true, new EchoProperty((byte) (listDevice.size() - 1))); // new device = true, lost device = false
+                  if (onItemSetChanging != null)
+                        onItemSetChanging.controlResult(true, new EchoProperty((byte) (listDevice.size() - 1))); // new device = true, lost device = false
             }
 
             @Override
             public void onNewBattery(Battery battery) {
                   super.onNewBattery(battery);
-                  System.out.println("\t   Device = " + battery);
+//                  System.out.println("\t   Device = " + battery);
+                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + battery);
 
                   // Set up
-                  battery.setReceiver(new MyBatteryReceiver());
-
+                  MyBatteryReceiver myBatteryReceiver = new MyBatteryReceiver();
+                  myBatteryReceiver.setContinuousTask(new TimerTask() {
+                        @Override
+                        public void run() {
+                              try {
+                                    battery.get().reqGetRemainingStoredElectricity1().send();
+                              } catch (Exception e) {
+                                    Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
+                                    if (myBatteryReceiver != null && myBatteryReceiver.getOnGetEPC() != null)
+                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(battery.EPC_REMAINING_STORED_ELECTRICITY1));
+                              }
+                              try {
+                                    battery.get().reqGetRemainingStoredElectricity3().send();
+                              } catch (Exception e) {
+                                    Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
+                                    if (myBatteryReceiver != null && myBatteryReceiver.getOnGetEPC() != null)
+                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(battery.EPC_REMAINING_STORED_ELECTRICITY3));
+                              }
+                        }
+                  });
+                  battery.setReceiver(myBatteryReceiver);
+                  myBatteryReceiver.startContinuousTask();
                   // Fire signal to update information
                   try {
                         battery.get().reqGetOperationStatus().send();
@@ -82,17 +93,39 @@ public class EchoController {
                         battery.get().reqGetRemainingStoredElectricity1().send(); // E2
                         battery.get().reqGetRemainingStoredElectricity3().send(); // E4
                   } catch (IOException e) {
-                        System.out.println("Get Property " + BATTERY.name() + " Failed: " + e.getMessage());
+                        Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected", e);
                   }
             }
 
             @Override
             public void onNewElectricVehicle(ElectricVehicle ev) {
                   super.onNewElectricVehicle(ev);
-                  System.out.println("\t   Device = " + ev);
+//                  System.out.println("\t   Device = " + ev);
+                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + ev);
 
                   // Setup
-                  ev.setReceiver(new MyElectricVehicleReceiver());
+                  MyElectricVehicleReceiver myElectricVehicleReceiver = new MyElectricVehicleReceiver();
+                  myElectricVehicleReceiver.setContinuousTask(new TimerTask() {
+                        @Override
+                        public void run() {
+                              try {
+                                    ev.get().reqGetRemainingBatteryCapacity1().send();
+                              } catch (Exception e) {
+                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    if (myElectricVehicleReceiver != null && myElectricVehicleReceiver.getOnGetEPC() != null)
+                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ev.EPC_REMAINING_BATTERY_CAPACITY1));
+                              }
+                              try {
+                                    ev.get().reqGetRemainingBatteryCapacity3().send();
+                              } catch (Exception e) {
+                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    if (myElectricVehicleReceiver != null && myElectricVehicleReceiver.getOnGetEPC() != null)
+                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ev.EPC_REMAINING_BATTERY_CAPACITY3));
+                              }
+                        }
+                  });
+                  ev.setReceiver(myElectricVehicleReceiver);
+                  myElectricVehicleReceiver.startContinuousTask();
 
                   // Fire signal to update information
                   try {
@@ -102,32 +135,47 @@ public class EchoController {
                         ev.get().reqGetRemainingBatteryCapacity1().send(); // E2
                         ev.get().reqGetRemainingBatteryCapacity3().send(); // E4
                   } catch (IOException e) {
-                        System.out.println("Get Property " + EV.name() + " Failed: " + e.getMessage());
+                        Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected", e);
                   }
             }
 
             @Override
             public void onNewHouseholdSolarPowerGeneration(HouseholdSolarPowerGeneration solar) {
                   super.onNewHouseholdSolarPowerGeneration(solar); //To change body of generated methods, choose Tools | Templates.
-                  System.out.println("\t   Device = " + solar);
+//                  System.out.println("\t   Device = " + solar);
+                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + solar);
 
                   // Set up
-                  solar.setReceiver(new MySolarReceiver());
-
+                  MySolarReceiver mySolarReceiver = new MySolarReceiver();
+                  mySolarReceiver.setContinuousTask(new TimerTask() {
+                        @Override
+                        public void run() {
+                              try {
+                                    solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send();
+                              } catch (Exception e) {
+                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    if (mySolarReceiver != null && mySolarReceiver.getOnGetEPC() != null)
+                                          mySolarReceiver.getOnGetEPC().controlResult(false, new EchoProperty(solar.EPC_MEASURED_CUMULATIVE_AMOUNT_OF_ELECTRICITY_GENERATED));
+                              }
+                        }
+                  });
+                  solar.setReceiver(mySolarReceiver);
+                  mySolarReceiver.startContinuousTask();
                   // Fire signal to update information
                   try {
                         solar.get().reqGetOperationStatus().send();
                         solar.get().reqGetMeasuredInstantaneousAmountOfElectricityGenerated().send();
                         solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send(); // E1
                   } catch (IOException e) {
-                        System.out.println("Get Property " + SOLAR.name() + " Failed: " + e.getMessage());
+                        Log.e(Constants.ECHO_TAG, "Solar Adapter: Device Disconnected", e);
                   }
             }
 
             @Override
             public void onNewGeneralLighting(GeneralLighting light) {
                   super.onNewGeneralLighting(light); //To change body of generated methods, choose Tools | Templates.
-                  System.out.println("\t   Device = " + light);
+//                  System.out.println("\t   Device = " + light);
+                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + light);
 
                   // Set up
                   light.setReceiver(new MyLightReceiver());
@@ -136,7 +184,7 @@ public class EchoController {
                   try {
                         light.get().reqGetOperationStatus().send();
                   } catch (IOException e) {
-                        System.out.println("Get Property " + LIGHT.name() + " Failed: " + e.getMessage());
+                        Log.e(Constants.ECHO_TAG, "Light Adapter: Device Disconnected", e);
                   }
             }
       };

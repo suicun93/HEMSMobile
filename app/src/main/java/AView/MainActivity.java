@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
       private TextView txtItemCount = null;
       private SwipeRefreshLayout pullToRefresh;
       private boolean listIsEmpty;
-      private DevicesAdapter adapter;
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
             // </editor-fold>
 
             // Bind data
-            adapter = new DevicesAdapter();
+            DevicesAdapter adapter = new DevicesAdapter();
             rvDevices.setAdapter(adapter);
             rvDevices.setLayoutManager(new WrapContentLinearLayoutManager(MainActivity.this));
 
-            // Listen new devices
-            EchoController.MY_ECHO_EVENT_LISTENER.setOnReceive((onAddingDevice, echoProperty) -> {
+            // Listen new devices and lost device
+            EchoController.MY_ECHO_EVENT_LISTENER.setOnItemSetChanging((onAddingDevice, positionChanged) -> {
                   // Reload whole of list Devices.
                   runOnUiThread(() -> {
                         listIsEmpty = EchoController.listDevice.isEmpty();
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         } else
                               txtItemCount.setText(R.string.default_title_no_item_found);
                         // Update list Device
-                        int position = echoProperty == null ? 0 : echoProperty.epc;
+                        int position = positionChanged == null ? 0 : positionChanged.epc;
                         if (onAddingDevice) adapter.notifyItemInserted(position);
                         else adapter.notifyItemRemoved(position);
                   });

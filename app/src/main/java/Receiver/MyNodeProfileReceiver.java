@@ -5,6 +5,8 @@
  */
 package Receiver;
 
+import android.util.Log;
+
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
 import com.sonycsl.echo.eoj.device.DeviceObject;
@@ -14,6 +16,7 @@ import com.sonycsl.echo.node.EchoNode;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import Common.Constants;
 import Main.EchoController;
 
 /**
@@ -57,12 +60,14 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
                                     }
                               }
                               if (unavailable) { // Remove old node in Echo
-                                    System.out.println("Removing: " + String.format("0x%04x", device.getEchoClassCode()));
+                                    Log.d(Constants.ECHO_TAG, "onGetInstanceListNotification: " + "Removing: " + String.format("0x%04x", device.getEchoClassCode()));
                                     node.removeDevice(device);
                                     device.removeNode();
+                                    if (device.getReceiver() instanceof ContinuouslyGotable)
+                                          ((ContinuouslyGotable) device.getReceiver()).stopContinuousTask();
                                     EchoController.listDevice.remove(count);
-                                    if (EchoController.MY_ECHO_EVENT_LISTENER.onGetEPC != null)
-                                          EchoController.MY_ECHO_EVENT_LISTENER.onGetEPC.handleResult(false, new EchoProperty((byte) count));
+                                    if (EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging != null)
+                                          EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging.controlResult(false, new EchoProperty((byte) count));
                                     break;
                               }
                               count++;
