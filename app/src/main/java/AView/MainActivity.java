@@ -88,24 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
             // Start Controller and Update (On some new OSs, we can not run network thread on main UI -> run on another thread.)
             new Thread(this::startController).start();
-
-//            new Timer().schedule(new TimerTask() {
-//                  @Override
-//                  public void run() {
-//                        runOnUiThread(() -> {
-//                              listIsEmpty = EchoController.listDevice.isEmpty();
-//                              rvDevices.setVisibility(listIsEmpty ? View.INVISIBLE : View.VISIBLE);
-//                              notFoundFace.setVisibility(listIsEmpty ? View.VISIBLE : View.INVISIBLE);
-//                              if (!listIsEmpty) {
-//                                    String itemFound = EchoController.listDevice.size() + getString(R.string.number_devices_found);
-//                                    txtItemCount.setText(itemFound);
-//                              } else txtItemCount.setText(R.string.default_title_no_item_found);
-//
-//
-//
-//                        });
-//                  }
-//            }, 250);
       }
 
       private void startController() {
