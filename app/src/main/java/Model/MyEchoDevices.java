@@ -6,6 +6,10 @@
 package Model;
 
 import com.sonycsl.echo.eoj.device.DeviceObject;
+import com.sonycsl.echo.eoj.device.housingfacilities.Battery;
+import com.sonycsl.echo.eoj.device.housingfacilities.ElectricVehicle;
+import com.sonycsl.echo.eoj.device.housingfacilities.GeneralLighting;
+import com.sonycsl.echo.eoj.device.housingfacilities.HouseholdSolarPowerGeneration;
 
 import AView.R;
 
@@ -13,25 +17,25 @@ import AView.R;
  * @author hoang-trung-duc
  */
 public enum MyEchoDevices {
-      EV((short) 0x027E, "ev") {
+      EV(ElectricVehicle.ECHO_CLASS_CODE, "ev") {
             @Override
             public int image() {
                   return R.drawable.ev;
             }
       },
-      BATTERY((short) 0x027D, "battery") {
+      BATTERY(Battery.ECHO_CLASS_CODE, "battery") {
             @Override
             public int image() {
                   return R.drawable.battery;
             }
       },
-      SOLAR((short) 0x0279, "solar") {
+      SOLAR(HouseholdSolarPowerGeneration.ECHO_CLASS_CODE, "solar") {
             @Override
             public int image() {
                   return R.drawable.solar;
             }
       },
-      LIGHT((short) 0x0290, "light") {
+      LIGHT(GeneralLighting.ECHO_CLASS_CODE, "light") {
             @Override
             public int image() {
                   return R.drawable.light;
@@ -44,7 +48,6 @@ public enum MyEchoDevices {
             }
       };
 
-      abstract public int image();
 
       public static MyEchoDevices from(DeviceObject device) {
             for (MyEchoDevices myDevice : values()) {
@@ -55,34 +58,15 @@ public enum MyEchoDevices {
             return UNKNOWN;
       }
 
-      public static void loadConfig(String[] nameConfig) {
-            String evName, solarName, batteryName, lightName;
-            evName = nameConfig[0];
-            batteryName = nameConfig[1];
-            solarName = nameConfig[2];
-            lightName = nameConfig[3];
-
-            EV.name = evName;
-            BATTERY.name = batteryName;
-            SOLAR.name = solarName;
-            LIGHT.name = lightName;
-      }
-
       // <editor-fold defaultstate="collapsed" desc="// Skip this">
       public final short classcode;
-      public final String type;
       public String name;
-      public String address;
-      public OperationStatus operationStatus = OperationStatus.OFF;
-      public OperationMode operationMode = OperationMode.Other;
-      public int d3, e2, e4;
-      public int e0, e1;
+
+      abstract public int image();
 
       MyEchoDevices(short classcode, String type) {
             this.classcode = classcode;
-            this.type = type;
             this.name = type;
       }
-
       // </editor-fold>
 }
