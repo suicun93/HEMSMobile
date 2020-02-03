@@ -153,7 +153,7 @@ public class EchoController {
                               try {
                                     solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "Solar Adapter: Device Disconnected" + e.getMessage());
                                     if (mySolarReceiver != null && mySolarReceiver.getOnGetEPC() != null)
                                           mySolarReceiver.getOnGetEPC().controlResult(false, new EchoProperty(solar.EPC_MEASURED_CUMULATIVE_AMOUNT_OF_ELECTRICITY_GENERATED));
                               }
