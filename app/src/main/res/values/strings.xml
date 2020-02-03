@@ -1,5 +1,5 @@
 <resources>
-      <string name="app_name">HEMS</string>
+      <string name="app_name">HEMS2</string>
       <string name="update">更新</string>
       <string name="updating">ちょっと待ってくだいさい</string>
       <string name="default_title_no_item_found">デバイスが見つかりません</string>

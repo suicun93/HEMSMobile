@@ -1,0 +1,1 @@
+package Receiver;/** * @author hoang-trung-duc */import com.sonycsl.echo.EchoProperty;public interface OnReceiveResult {      default void handleResult(boolean success) {            handleResult(success, null);      }      void handleResult(boolean success, EchoProperty echoProperty);}

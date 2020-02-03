@@ -1,1 +1,0 @@
-package Receiver;public interface OnSuccess {      void handleResult(boolean success);}

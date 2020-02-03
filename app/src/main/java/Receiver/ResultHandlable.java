@@ -1,1 +1,1 @@
-package Receiver;public interface ResultHandlable {      void setResultHandle(OnSuccess OnSuccess);}
+package Receiver;/** * @author hoang-trung-duc */public interface ResultHandlable {      default void setOnReceive(OnReceiveResult onGetEPC) {            setOnReceive(null, onGetEPC);      }      void setOnReceive(OnReceiveResult onSetEPC, OnReceiveResult onGetEPC);      OnReceiveResult getOnGetEPC();}

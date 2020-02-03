@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Receiver;
 
 import com.sonycsl.echo.EchoProperty;
@@ -13,82 +8,91 @@ import Common.Convert;
 import Model.OperationMode;
 import Model.OperationStatus;
 
-import static Model.MyEchoDevices.BATTERY;
-
 /**
  * @author hoang-trung-duc
  */
 public class MyBatteryReceiver extends Battery.Receiver implements ResultHandlable {
+      private OperationStatus operationStatus;
+      private OperationMode operationMode;
+      private int instantaneous, currentElectricEnergy, percentCurrent;
+      private OnReceiveResult OnSetEPC = null;
+      private OnReceiveResult OnGetEPC = null;
+
+
+      public OperationStatus getOperationStatus() {
+            return operationStatus;
+      }
+
+      public OperationMode getOperationMode() {
+            return operationMode;
+      }
+
+      public int getInstantaneous() {
+            return instantaneous;
+      }
+
+      public int getCurrentElectricEnergy() {
+            return currentElectricEnergy;
+      }
+
+      public int getPercentCurrent() {
+            return percentCurrent;
+      }
+
+      @Override
+      public OnReceiveResult getOnGetEPC() {
+            return OnGetEPC;
+      }
+
+      public OnReceiveResult getOnSetEPC() {
+            return OnSetEPC;
+      }
 
       @Override
       protected void onGetOperationStatus(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             super.onGetOperationStatus(eoj, tid, esv, property, success);
-            if (!success) {
-                  System.out.println("onGetProperty " + BATTERY.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-            } else {
-                  BATTERY.operationStatus = OperationStatus.from(property.edt[0]);
-            }
+            if (success) operationStatus = OperationStatus.from(property.edt[0]);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
 
       @Override
       protected void onGetOperationModeSetting(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             super.onGetOperationModeSetting(eoj, tid, esv, property, success);
-            if (!success) {
-                  System.out.println("onGetProperty " + BATTERY.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-            } else {
-                  BATTERY.operationMode = OperationMode.from(property.edt[0]);
-            }
+            if (success) operationMode = OperationMode.from(property.edt[0]);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
 
       @Override
       protected void onGetMeasuredInstantaneousChargeDischargeElectricEnergy(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             super.onGetMeasuredInstantaneousChargeDischargeElectricEnergy(eoj, tid, esv, property, success);
-            if (!success) {
-                  System.out.println("onGetProperty " + BATTERY.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-            } else {
-                  BATTERY.d3 = Convert.byteArrayToInt(property.edt);
-            }
+            if (success) instantaneous = Convert.byteArrayToInt(property.edt);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
 
       @Override
       protected void onGetRemainingStoredElectricity1(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
-            synchronized (BATTERY) {
-                  super.onGetRemainingStoredElectricity1(eoj, tid, esv, property, success);
-                  if (!success) {
-                        System.out.println("onGetProperty " + BATTERY.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-                  } else {
-                        BATTERY.e2 = Convert.byteArrayToInt(property.edt);
-                  }
-                  BATTERY.notify();
-            }
+            super.onGetRemainingStoredElectricity1(eoj, tid, esv, property, success);
+            if (success) currentElectricEnergy = Convert.byteArrayToInt(property.edt);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
 
       @Override
       protected void onGetRemainingStoredElectricity3(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
-            synchronized (BATTERY) {
-                  super.onGetRemainingStoredElectricity3(eoj, tid, esv, property, success);
-                  if (!success) {
-                        System.out.println("onGetProperty " + BATTERY.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-                  } else {
-                        BATTERY.e4 = Convert.byteArrayToInt(property.edt);
-                  }
-                  BATTERY.notify();
-            }
+            super.onGetRemainingStoredElectricity3(eoj, tid, esv, property, success);
+            if (success) percentCurrent = Convert.byteArrayToInt(property.edt);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
-
-
-      public OnSuccess onSuccess;
 
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-            onSuccess.handleResult(success);
+            if (OnSetEPC != null) OnSetEPC.handleResult(success);
             return result;
       }
 
       @Override
-      public void setResultHandle(OnSuccess onSuccess) {
-            this.onSuccess = onSuccess;
+      public void setOnReceive(OnReceiveResult OnSetEPC, OnReceiveResult OnGetEPC) {
+            this.OnSetEPC = OnSetEPC;
+            this.OnGetEPC = OnGetEPC;
       }
-
 }

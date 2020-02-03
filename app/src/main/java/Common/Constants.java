@@ -23,6 +23,7 @@ public enum Constants {
       PositionKey("position"),
       EOJKey("eoj");
 
+      public static final String ECHO_TAG = "Echo";
       public static String ERROR = "エラー";
 
       public static int MAX_ENERGY_EV_BATT = 999999999;

@@ -1,45 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Receiver;
 
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.GeneralLighting;
 
-import Common.Convert;
 import Model.OperationStatus;
-
-import static Model.MyEchoDevices.LIGHT;
 
 /**
  * @author hoang-trung-duc
  */
 public class MyLightReceiver extends GeneralLighting.Receiver implements ResultHandlable {
+      private OperationStatus operationStatus;
+      private OnReceiveResult OnSetEPC = null;
+      private OnReceiveResult OnGetEPC = null;
+
+      public OnReceiveResult getOnSetEPC() {
+            return OnSetEPC;
+      }
+
+      @Override
+      public OnReceiveResult getOnGetEPC() {
+            return OnGetEPC;
+      }
+
+      public OperationStatus getOperationStatus() {
+            return operationStatus;
+      }
 
       @Override
       protected void onGetOperationStatus(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
-            super.onGetOperationStatus(eoj, tid, esv, property, success); //To change body of generated methods, choose Tools | Templates.
-            if (!success) {
-                  System.out.println("onGetProperty " + LIGHT.name() + " Failed: EPC = " + Convert.byteToHex(property.epc));
-            } else {
-                  LIGHT.operationStatus = OperationStatus.from(property.edt[0]);
-            }
+            super.onGetOperationStatus(eoj, tid, esv, property, success);
+            if (success) operationStatus = OperationStatus.from(property.edt[0]);
+            if (OnGetEPC != null) OnGetEPC.handleResult(success, property);
       }
-
-      public OnSuccess OnSuccess;
 
       @Override
       protected boolean onSetProperty(EchoObject eoj, short tid, byte esv, EchoProperty property, boolean success) {
             boolean result = super.onSetProperty(eoj, tid, esv, property, success);
-            OnSuccess.handleResult(success);
+            if (OnSetEPC != null) OnSetEPC.handleResult(success);
             return result;
       }
 
       @Override
-      public void setResultHandle(OnSuccess OnSuccess) {
-            this.OnSuccess = OnSuccess;
+      public void setOnReceive(OnReceiveResult OnSetEPC, OnReceiveResult OnGetEPC) {
+            this.OnSetEPC = OnSetEPC;
+            this.OnGetEPC = OnGetEPC;
       }
 }
