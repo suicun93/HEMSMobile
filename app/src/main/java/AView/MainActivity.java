@@ -84,8 +84,13 @@ public class MainActivity extends AppCompatActivity {
                               txtItemCount.setText(R.string.default_title_no_item_found);
                         // Update list Device
                         int position = positionChanged == null ? 0 : positionChanged.epc;
-                        if (onAddingDevice) adapter.notifyItemInserted(position);
-                        else adapter.notifyItemRemoved(position);
+                        if (onAddingDevice) {
+                              adapter.notifyItemInserted(position);
+                              adapter.notifyDataSetChanged();
+                        } else {
+                              adapter.notifyItemRemoved(position);
+                              adapter.notifyDataSetChanged();
+                        }
                   });
             });
 
