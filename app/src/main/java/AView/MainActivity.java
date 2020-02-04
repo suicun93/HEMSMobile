@@ -1,6 +1,7 @@
 package AView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.Timer;
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Bind data
             DevicesAdapter adapter = new DevicesAdapter();
+            ((SimpleItemAnimator) rvDevices.getItemAnimator()).setSupportsChangeAnimations(false);
             rvDevices.setAdapter(adapter);
             rvDevices.setLayoutManager(new WrapContentLinearLayoutManager(MainActivity.this));
 
@@ -119,10 +123,19 @@ public class MainActivity extends AppCompatActivity {
             // Update information
             if (rvDevices.getAdapter() != null) rvDevices.getAdapter().notifyDataSetChanged();
       }
+
+      @Override
+      protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            // check if the request code is same as what is passed  here it is 2
+            if (requestCode == 2)
+                  // Update information
+                  if (rvDevices.getAdapter() != null) rvDevices.getAdapter().notifyDataSetChanged();
+      }
 }
 
 class WrapContentLinearLayoutManager extends LinearLayoutManager {
-      public WrapContentLinearLayoutManager(Context context) {
+      WrapContentLinearLayoutManager(Context context) {
             super(context);
       }
 

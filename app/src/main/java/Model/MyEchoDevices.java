@@ -64,9 +64,9 @@ public enum MyEchoDevices {
 
       abstract public int image();
 
-      MyEchoDevices(short classcode, String type) {
+      MyEchoDevices(short classcode, String name) {
             this.classcode = classcode;
-            this.name = type;
+            this.name = name;
       }
       // </editor-fold>
 }
