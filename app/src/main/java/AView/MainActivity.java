@@ -132,19 +132,19 @@ public class MainActivity extends AppCompatActivity {
                   // Update information
                   if (rvDevices.getAdapter() != null) rvDevices.getAdapter().notifyDataSetChanged();
       }
-}
 
-class WrapContentLinearLayoutManager extends LinearLayoutManager {
-      WrapContentLinearLayoutManager(Context context) {
-            super(context);
-      }
+      class WrapContentLinearLayoutManager extends LinearLayoutManager {
+            WrapContentLinearLayoutManager(Context context) {
+                  super(context);
+            }
 
-      @Override
-      public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-            try {
-                  super.onLayoutChildren(recycler, state);
-            } catch (IndexOutOfBoundsException e) {
-                  Log.e(Constants.ECHO_TAG, "meet a IOOBE in RecyclerView");
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                  try {
+                        super.onLayoutChildren(recycler, state);
+                  } catch (IndexOutOfBoundsException e) {
+                        Log.e(Constants.ECHO_TAG, "meet a IOOBE in RecyclerView");
+                  }
             }
       }
 }
