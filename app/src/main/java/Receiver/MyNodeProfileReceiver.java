@@ -50,7 +50,6 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
                               listDeviceAvailable[i] = bb.getShort(0);
                         }
 
-                        int count = 0;
                         for (DeviceObject device : EchoController.listDevice) {
                               boolean unavailable = true;
                               for (short echoClassCode : listDeviceAvailable) {
@@ -60,19 +59,31 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
                                     }
                               }
                               if (unavailable) { // Remove old node in Echo
-                                    Log.d(Constants.ECHO_TAG, "onGetInstanceListNotification: " + "Removing: " + String.format("0x%04x", device.getEchoClassCode()));
-                                    node.removeDevice(device);
-                                    device.removeNode();
-                                    if (device.getReceiver() instanceof ContinuouslyGotable)
-                                          ((ContinuouslyGotable) device.getReceiver()).stopContinuousTask();
-                                    EchoController.listDevice.remove(count);
-                                    if (EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging != null)
-                                          EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging.controlResult(false, new EchoProperty((byte) count));
+                                    onRemoveDevice(device);
                                     break;
                               }
-                              count++;
                         }
                   }
             }
+      }
+
+      private void onRemoveDevice(DeviceObject deviceObject) {
+            // Notify
+            int position = EchoController.listDevice.indexOf(deviceObject);
+            if (EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging != null)
+                  EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging.controlResult(false, new EchoProperty((byte) position));
+
+            // Stop current thread
+            if (deviceObject.getReceiver() instanceof ContinuouslyGotable)
+                  ((ContinuouslyGotable) deviceObject.getReceiver()).stopContinuousTask();
+            if (deviceObject.getReceiver() instanceof ResultControllable)
+                  ((ResultControllable) deviceObject.getReceiver()).setOnReceive(null, null);
+
+            // Remove device from Node
+            EchoNode nodeTemp = deviceObject.getNode();
+            nodeTemp.removeDevice(deviceObject);
+            deviceObject.removeNode();
+            EchoController.listDevice.remove(deviceObject);
+            Log.d(Constants.ECHO_TAG, "onGetInstanceListNotification: " + "Removed: " + String.format("0x%04x", deviceObject.getEchoClassCode()));
       }
 }
