@@ -86,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
                         int position = positionChanged == null ? 0 : positionChanged.epc;
                         if (onAddingDevice) {
                               adapter.notifyItemInserted(position);
-                              adapter.notifyDataSetChanged();
                         } else {
                               adapter.notifyItemRemoved(position);
-                              adapter.notifyDataSetChanged();
+                              if (position != rvDevices.getAdapter().getItemCount())
+                                    adapter.notifyItemRangeChanged(position, rvDevices.getAdapter().getItemCount() - position);
                         }
                   });
             });
