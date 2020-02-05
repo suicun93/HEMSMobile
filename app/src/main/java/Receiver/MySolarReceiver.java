@@ -18,8 +18,8 @@ import Model.OperationStatus;
 public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver implements ResultControllable, ContinuouslyGotable {
       private OperationStatus operationStatus;
       private int instantaneous, currentElectricEnergy;
-      private OnReceiveResult OnSetEPC = null;
-      private OnReceiveResult OnGetEPC = null;
+      private OnReceiveResultListener OnSetEPC = null;
+      private OnReceiveResultListener OnGetEPC = null;
       private Timer timer = new Timer();
       private TimerTask continuousTask;
 
@@ -39,12 +39,12 @@ public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver impl
             return currentElectricEnergy;
       }
 
-      public OnReceiveResult getOnSetEPC() {
+      public OnReceiveResultListener getOnSetEPC() {
             return OnSetEPC;
       }
 
       @Override
-      public OnReceiveResult getOnGetEPC() {
+      public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
       }
 
@@ -78,7 +78,7 @@ public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver impl
       }
 
       @Override
-      public void setOnReceive(OnReceiveResult onSetEPC, OnReceiveResult onGetEPC) {
+      public void setOnReceiveListener(OnReceiveResultListener onSetEPC, OnReceiveResultListener onGetEPC) {
             this.OnSetEPC = onSetEPC;
             this.OnGetEPC = onGetEPC;
       }

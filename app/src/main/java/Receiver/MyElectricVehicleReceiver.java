@@ -20,8 +20,8 @@ public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver implemen
       private OperationStatus operationStatus;
       private OperationMode operationMode;
       private int instantaneous, currentElectricEnergy, percentCurrent;
-      private OnReceiveResult OnSetEPC = null;
-      private OnReceiveResult OnGetEPC = null;
+      private OnReceiveResultListener OnSetEPC = null;
+      private OnReceiveResultListener OnGetEPC = null;
       private Timer timer = new Timer();
       private TimerTask continuousTask;
 
@@ -50,11 +50,11 @@ public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver implemen
       }
 
       @Override
-      public OnReceiveResult getOnGetEPC() {
+      public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
       }
 
-      public OnReceiveResult getOnSetEPC() {
+      public OnReceiveResultListener getOnSetEPC() {
             return OnSetEPC;
       }
 
@@ -101,7 +101,7 @@ public class MyElectricVehicleReceiver extends ElectricVehicle.Receiver implemen
       }
 
       @Override
-      public void setOnReceive(OnReceiveResult OnSetEPC, OnReceiveResult OnGetEPC) {
+      public void setOnReceiveListener(OnReceiveResultListener OnSetEPC, OnReceiveResultListener OnGetEPC) {
             this.OnSetEPC = OnSetEPC;
             this.OnGetEPC = OnGetEPC;
       }

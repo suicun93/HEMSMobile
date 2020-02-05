@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             rvDevices.setLayoutManager(new WrapContentLinearLayoutManager(MainActivity.this));
 
             // Listen new devices and lost device
-            EchoController.MY_ECHO_EVENT_LISTENER.setOnItemSetChanging((onAddingDevice, positionChanged) -> {
+            EchoController.MY_ECHO_EVENT_LISTENER.setOnItemSetChangingListener((onAddingDevice, positionChanged) -> {
                   // Reload whole of list Devices.
                   runOnUiThread(() -> {
                         listIsEmpty = EchoController.listDevice.isEmpty();

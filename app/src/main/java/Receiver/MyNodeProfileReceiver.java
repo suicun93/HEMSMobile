@@ -70,14 +70,14 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
       private void onRemoveDevice(DeviceObject deviceObject) {
             // Notify
             int position = EchoController.listDevice.indexOf(deviceObject);
-            if (EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging != null)
-                  EchoController.MY_ECHO_EVENT_LISTENER.onItemSetChanging.controlResult(false, new EchoProperty((byte) position));
+            if (EchoController.MY_ECHO_EVENT_LISTENER.getOnItemSetChangingListener() != null)
+                  EchoController.MY_ECHO_EVENT_LISTENER.getOnItemSetChangingListener().controlResult(false, new EchoProperty((byte) position));
 
             // Stop current thread
             if (deviceObject.getReceiver() instanceof ContinuouslyGotable)
                   ((ContinuouslyGotable) deviceObject.getReceiver()).stopContinuousTask();
             if (deviceObject.getReceiver() instanceof ResultControllable)
-                  ((ResultControllable) deviceObject.getReceiver()).setOnReceive(null, null);
+                  ((ResultControllable) deviceObject.getReceiver()).setOnReceiveListener(null, null);
 
             // Remove device from Node
             EchoNode nodeTemp = deviceObject.getNode();

@@ -11,15 +11,15 @@ import Model.OperationStatus;
  */
 public class MyLightReceiver extends GeneralLighting.Receiver implements ResultControllable {
       private OperationStatus operationStatus;
-      private OnReceiveResult OnSetEPC = null;
-      private OnReceiveResult OnGetEPC = null;
+      private OnReceiveResultListener OnSetEPC = null;
+      private OnReceiveResultListener OnGetEPC = null;
 
-      public OnReceiveResult getOnSetEPC() {
+      public OnReceiveResultListener getOnSetEPC() {
             return OnSetEPC;
       }
 
       @Override
-      public OnReceiveResult getOnGetEPC() {
+      public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
       }
 
@@ -42,7 +42,7 @@ public class MyLightReceiver extends GeneralLighting.Receiver implements ResultC
       }
 
       @Override
-      public void setOnReceive(OnReceiveResult OnSetEPC, OnReceiveResult OnGetEPC) {
+      public void setOnReceiveListener(OnReceiveResultListener OnSetEPC, OnReceiveResultListener OnGetEPC) {
             this.OnSetEPC = OnSetEPC;
             this.OnGetEPC = OnGetEPC;
       }
