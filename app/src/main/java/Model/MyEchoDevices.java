@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
 import com.sonycsl.echo.eoj.device.DeviceObject;
@@ -11,62 +6,55 @@ import com.sonycsl.echo.eoj.device.housingfacilities.ElectricVehicle;
 import com.sonycsl.echo.eoj.device.housingfacilities.GeneralLighting;
 import com.sonycsl.echo.eoj.device.housingfacilities.HouseholdSolarPowerGeneration;
 
-import AView.R;
+import static AView.R.drawable.battery;
+import static AView.R.drawable.ev;
+import static AView.R.drawable.light;
+import static AView.R.drawable.logo;
+import static AView.R.drawable.solar;
+import static AView.R.string.battery_name;
+import static AView.R.string.ev_name;
+import static AView.R.string.light_name;
+import static AView.R.string.solar_name;
+import static AView.R.string.unknown_name;
 
 /**
  * @author hoang-trung-duc
  */
 public enum MyEchoDevices {
-      EV(ElectricVehicle.ECHO_CLASS_CODE, "ev") {
-            @Override
-            public int image() {
-                  return R.drawable.ev;
-            }
-      },
-      BATTERY(Battery.ECHO_CLASS_CODE, "battery") {
-            @Override
-            public int image() {
-                  return R.drawable.battery;
-            }
-      },
-      SOLAR(HouseholdSolarPowerGeneration.ECHO_CLASS_CODE, "solar") {
-            @Override
-            public int image() {
-                  return R.drawable.solar;
-            }
-      },
-      LIGHT(GeneralLighting.ECHO_CLASS_CODE, "light") {
-            @Override
-            public int image() {
-                  return R.drawable.light;
-            }
-      },
-      UNKNOWN((short) 0x0000, "unknown") {
-            @Override
-            public int image() {
-                  return R.drawable.logo;
-            }
-      };
+      BATTERY(Battery.ECHO_CLASS_CODE,
+                battery_name,
+                battery),
+      EV(ElectricVehicle.ECHO_CLASS_CODE,
+                ev_name,
+                ev),
+      LIGHT(GeneralLighting.ECHO_CLASS_CODE,
+                light_name,
+                light),
+      SOLAR(HouseholdSolarPowerGeneration.ECHO_CLASS_CODE,
+                solar_name,
+                solar),
+      UNKNOWN((short) 0x0000,
+                unknown_name,
+                logo);
 
+      // <editor-fold defaultState="collapsed" desc="// Skip this">
+      public final short classCode;
+      public int name;
+      public int image;
+
+      MyEchoDevices(short classCode, int name, int image) {
+            this.classCode = classCode;
+            this.name = name;
+            this.image = image;
+      }
 
       public static MyEchoDevices from(DeviceObject device) {
             for (MyEchoDevices myDevice : values()) {
-                  if (myDevice.classcode == device.getEchoClassCode()) {
+                  if (myDevice.classCode == device.getEchoClassCode()) {
                         return myDevice;
                   }
             }
             return UNKNOWN;
-      }
-
-      // <editor-fold defaultstate="collapsed" desc="// Skip this">
-      public final short classcode;
-      public String name;
-
-      abstract public int image();
-
-      MyEchoDevices(short classcode, String name) {
-            this.classcode = classcode;
-            this.name = name;
       }
       // </editor-fold>
 }

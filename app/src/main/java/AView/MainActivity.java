@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Bind data
             DevicesAdapter adapter = new DevicesAdapter();
-            ((SimpleItemAnimator) rvDevices.getItemAnimator()).setSupportsChangeAnimations(false);
+            ((SimpleItemAnimator) Objects.requireNonNull(rvDevices.getItemAnimator())).setSupportsChangeAnimations(false);
             rvDevices.setAdapter(adapter);
             rvDevices.setLayoutManager(new WrapContentLinearLayoutManager(MainActivity.this));
 
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                               adapter.notifyItemInserted(position);
                         } else {
                               adapter.notifyItemRemoved(position);
-                              if (position != rvDevices.getAdapter().getItemCount())
+                              if (position != Objects.requireNonNull(rvDevices.getAdapter()).getItemCount())
                                     adapter.notifyItemRangeChanged(position, rvDevices.getAdapter().getItemCount() - position);
                         }
                   });

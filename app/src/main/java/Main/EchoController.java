@@ -2,14 +2,6 @@ package Main;
 
 import android.util.Log;
 
-import Common.Constants;
-import Receiver.MyBatteryReceiver;
-import Receiver.MyEchoEventListener;
-import Receiver.MyElectricVehicleReceiver;
-import Receiver.MyLightReceiver;
-import Receiver.MyNodeProfileReceiver;
-import Receiver.MySolarReceiver;
-
 import com.sonycsl.echo.Echo;
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.device.DeviceObject;
@@ -26,6 +18,14 @@ import com.sonycsl.echo.processing.defaults.DefaultNodeProfile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
+
+import Common.Constants;
+import Receiver.MyBatteryReceiver;
+import Receiver.MyEchoEventListener;
+import Receiver.MyElectricVehicleReceiver;
+import Receiver.MyLightReceiver;
+import Receiver.MyNodeProfileReceiver;
+import Receiver.MySolarReceiver;
 
 /**
  * @author hoang-trung-duc
@@ -71,15 +71,15 @@ public class EchoController {
                                     battery.get().reqGetRemainingStoredElectricity1().send();
                               } catch (Exception e) {
                                     Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
-                                    if (myBatteryReceiver != null && myBatteryReceiver.getOnGetEPC() != null)
-                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(battery.EPC_REMAINING_STORED_ELECTRICITY1));
+                                    if (myBatteryReceiver.getOnGetEPC() != null)
+                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY1));
                               }
                               try {
                                     battery.get().reqGetRemainingStoredElectricity3().send();
                               } catch (Exception e) {
                                     Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
-                                    if (myBatteryReceiver != null && myBatteryReceiver.getOnGetEPC() != null)
-                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(battery.EPC_REMAINING_STORED_ELECTRICITY3));
+                                    if (myBatteryReceiver.getOnGetEPC() != null)
+                                          myBatteryReceiver.getOnGetEPC().controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY3));
                               }
                         }
                   });
@@ -112,15 +112,15 @@ public class EchoController {
                                     ev.get().reqGetRemainingBatteryCapacity1().send();
                               } catch (Exception e) {
                                     Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
-                                    if (myElectricVehicleReceiver != null && myElectricVehicleReceiver.getOnGetEPC() != null)
-                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ev.EPC_REMAINING_BATTERY_CAPACITY1));
+                                    if (myElectricVehicleReceiver.getOnGetEPC() != null)
+                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ElectricVehicle.EPC_REMAINING_BATTERY_CAPACITY1));
                               }
                               try {
                                     ev.get().reqGetRemainingBatteryCapacity3().send();
                               } catch (Exception e) {
                                     Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
-                                    if (myElectricVehicleReceiver != null && myElectricVehicleReceiver.getOnGetEPC() != null)
-                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ev.EPC_REMAINING_BATTERY_CAPACITY3));
+                                    if (myElectricVehicleReceiver.getOnGetEPC() != null)
+                                          myElectricVehicleReceiver.getOnGetEPC().controlResult(false, new EchoProperty(ElectricVehicle.EPC_REMAINING_BATTERY_CAPACITY3));
                               }
                         }
                   });
@@ -154,8 +154,8 @@ public class EchoController {
                                     solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send();
                               } catch (Exception e) {
                                     Log.e(Constants.ECHO_TAG, "Solar Adapter: Device Disconnected" + e.getMessage());
-                                    if (mySolarReceiver != null && mySolarReceiver.getOnGetEPC() != null)
-                                          mySolarReceiver.getOnGetEPC().controlResult(false, new EchoProperty(solar.EPC_MEASURED_CUMULATIVE_AMOUNT_OF_ELECTRICITY_GENERATED));
+                                    if (mySolarReceiver.getOnGetEPC() != null)
+                                          mySolarReceiver.getOnGetEPC().controlResult(false, new EchoProperty(HouseholdSolarPowerGeneration.EPC_MEASURED_CUMULATIVE_AMOUNT_OF_ELECTRICITY_GENERATED));
                               }
                         }
                   });
@@ -202,7 +202,7 @@ public class EchoController {
       }
 
       // Add Event
-      public static void addEvent() {
+      private static void addEvent() {
             Echo.addEventListener(MY_ECHO_EVENT_LISTENER);
       }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Common;
 
 /**
@@ -28,7 +23,6 @@ public enum Constants {
 
       public static int MAX_ENERGY_EV_BATT = 999999999;
       public static int MAX_ENERGY_SOLAR = 65533;
-      public static int TIME_OUT = 100;
       public static int PERIOD = 2000;
 
       public static byte SCHEDULE_CONFIG_EPC = (byte) 0xFF;

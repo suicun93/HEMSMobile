@@ -5,24 +5,52 @@
  */
 package Model;
 
-import androidx.annotation.NonNull;
+import AView.R;
 
 /**
  * @author hoang-trung-duc
  */
 public enum OperationMode {
-      Other((byte) 0x40, "その他"),
-      RapidCharging((byte) 0x41, "急速充電"),
-      Charging((byte) 0x42, "充電"),
-      Discharging((byte) 0x43, "放電"),
-      Standby((byte) 0x44, "待機"),
-      Test((byte) 0x45, "テスト"),
-      Automatic((byte) 0x46, "自動"),
-      Idle((byte) 0x47, "アイドル状態"),
-      Restart((byte) 0x48, "再起動"),
-      EffectiveCapacityRecalculationProcessing((byte) 0x49, "EffectiveCapacityRecalculationProcessing");
+      Other(
+                (byte) 0x40,
+                R.string.operation_name_other),
+      RapidCharging(
+                (byte) 0x41,
+                R.string.operation_name_rapid_charging),
+      Charging(
+                (byte) 0x42,
+                R.string.operation_name_charging),
+      Discharging(
+                (byte) 0x43,
+                R.string.operation_name_discharging),
+      Standby(
+                (byte) 0x44,
+                R.string.operation_name_standby),
+      Test(
+                (byte) 0x45,
+                R.string.operation_name_test),
+      Automatic(
+                (byte) 0x46,
+                R.string.operation_name_automatic),
+      Idle(
+                (byte) 0x47,
+                R.string.operation_name_idle),
+      Restart(
+                (byte) 0x48,
+                R.string.operation_name_restart);
+      // Too long parameters makes my source code ugly.
+//      EffectiveCapacityRecalculationProcessing((byte) 0x49, "EffectiveCapacityRecalculationProcessing");
 
-      // <editor-fold defaultstate="collapsed" desc="//Skip this">
+      public final int name;
+
+      public final byte value;
+
+      OperationMode(byte operation, int name) {
+            this.value = operation;
+            this.name = name;
+      }
+
+      // <editor-fold defaultState="collapsed" desc="//Skip this">
       public static OperationMode from(byte value) {
             for (OperationMode mode : values()) {
                   if (mode.value == value) {
@@ -30,20 +58,6 @@ public enum OperationMode {
                   }
             }
             return null;
-      }
-
-      @NonNull
-      @Override
-      public String toString() {
-            return japaneseName;
-      }
-
-      public final byte value;
-      public final String japaneseName;
-
-      OperationMode(byte operation, String japaneseName) {
-            this.value = operation;
-            this.japaneseName = japaneseName;
       }
       // </editor-fold>
 }
