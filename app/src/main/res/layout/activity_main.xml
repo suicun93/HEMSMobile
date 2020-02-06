@@ -45,7 +45,7 @@
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintTop_toTopOf="parent"
-                  app:srcCompat="@drawable/not_found_face" />
+                  app:srcCompat="@drawable/sad_face" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                   android:id="@+id/refresh"
