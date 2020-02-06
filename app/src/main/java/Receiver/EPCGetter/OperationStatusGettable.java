@@ -1,0 +1,1 @@
+package Receiver.EPCGetter;import Model.OperationStatus;public interface OperationStatusGettable {      OperationStatus getOperationStatus();}

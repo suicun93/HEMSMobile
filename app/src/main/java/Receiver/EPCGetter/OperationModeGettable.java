@@ -1,0 +1,1 @@
+package Receiver.EPCGetter;import Model.OperationMode;public interface OperationModeGettable {      OperationMode getOperationMode();}

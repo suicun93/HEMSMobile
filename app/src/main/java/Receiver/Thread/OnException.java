@@ -1,0 +1,1 @@
+package Receiver.Thread;public interface OnException {      void handle(Throwable e);}

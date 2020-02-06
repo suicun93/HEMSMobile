@@ -1,0 +1,1 @@
+package Receiver.Thread;import java.util.TimerTask;public interface ContinuouslyGotable {      void setUpdateTask(TimerTask timerTask);      void startUpdateTask();      void stopUpdateTask();}

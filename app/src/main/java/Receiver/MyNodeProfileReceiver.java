@@ -18,6 +18,8 @@ import java.nio.ByteOrder;
 
 import Common.Constants;
 import Main.EchoController;
+import Receiver.Thread.ContinuouslyGotable;
+import Receiver.OnGetSetListener.ResultControllable;
 
 /**
  * @author hoang-trung-duc
@@ -75,7 +77,7 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
 
             // Stop current thread
             if (deviceObject.getReceiver() instanceof ContinuouslyGotable)
-                  ((ContinuouslyGotable) deviceObject.getReceiver()).stopContinuousTask();
+                  ((ContinuouslyGotable) deviceObject.getReceiver()).stopUpdateTask();
             if (deviceObject.getReceiver() instanceof ResultControllable)
                   ((ResultControllable) deviceObject.getReceiver()).setOnReceiveListener(null, null);
 

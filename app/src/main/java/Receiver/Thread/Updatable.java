@@ -1,0 +1,1 @@
+package Receiver.Thread;public interface Updatable {      void update(OnException onException);}

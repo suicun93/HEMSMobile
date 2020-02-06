@@ -5,17 +5,26 @@ import com.sonycsl.echo.eoj.EchoObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.GeneralLighting;
 
 import Model.OperationStatus;
+import Receiver.Thread.OnException;
+import Receiver.OnGetSetListener.OnReceiveResultListener;
+import Receiver.EPCGetter.OperationStatusGettable;
+import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.Updatable;
 
 /**
  * @author hoang-trung-duc
  */
-public class MyLightReceiver extends GeneralLighting.Receiver implements ResultControllable {
+public class MyLightReceiver extends GeneralLighting.Receiver implements
+          ResultControllable,
+          OperationStatusGettable,
+          Updatable {
       private OperationStatus operationStatus;
       private OnReceiveResultListener OnSetEPC = null;
       private OnReceiveResultListener OnGetEPC = null;
+      private final GeneralLighting light;
 
-      public OnReceiveResultListener getOnSetEPC() {
-            return OnSetEPC;
+      public MyLightReceiver(GeneralLighting light) {
+            this.light = light;
       }
 
       @Override
@@ -23,6 +32,7 @@ public class MyLightReceiver extends GeneralLighting.Receiver implements ResultC
             return OnGetEPC;
       }
 
+      @Override
       public OperationStatus getOperationStatus() {
             return operationStatus;
       }
@@ -45,5 +55,16 @@ public class MyLightReceiver extends GeneralLighting.Receiver implements ResultC
       public void setOnReceiveListener(OnReceiveResultListener OnSetEPC, OnReceiveResultListener OnGetEPC) {
             this.OnSetEPC = OnSetEPC;
             this.OnGetEPC = OnGetEPC;
+      }
+
+      @Override
+      public void update(OnException onException) {
+            new Thread(() -> {
+                  try {
+                        light.get().reqGetOperationStatus().send();
+                  } catch (Exception e) {
+                        onException.handle(e);
+                  }
+            }).start();
       }
 }

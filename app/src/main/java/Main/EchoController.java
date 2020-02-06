@@ -62,8 +62,8 @@ public class EchoController {
                   Log.d(Constants.ECHO_TAG, "onNewBattery: " + battery);
 
                   // Set up
-                  MyBatteryReceiver myBatteryReceiver = new MyBatteryReceiver();
-                  myBatteryReceiver.setContinuousTask(new TimerTask() {
+                  MyBatteryReceiver myBatteryReceiver = new MyBatteryReceiver(battery);
+                  myBatteryReceiver.setUpdateTask(new TimerTask() {
                         @Override
                         public void run() {
                               try {
@@ -83,17 +83,12 @@ public class EchoController {
                         }
                   });
                   battery.setReceiver(myBatteryReceiver);
-                  myBatteryReceiver.startContinuousTask();
+
                   // Fire signal to update information
-                  try {
-                        battery.get().reqGetOperationStatus().send();
-                        battery.get().reqGetOperationModeSetting().send();
-                        battery.get().reqGetMeasuredInstantaneousChargeDischargeElectricEnergy().send();
-                        battery.get().reqGetRemainingStoredElectricity1().send(); // E2
-                        battery.get().reqGetRemainingStoredElectricity3().send(); // E4
-                  } catch (IOException e) {
-                        Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected", e);
-                  }
+                  myBatteryReceiver.update(exception -> {
+                        Log.e(Constants.ECHO_TAG, "onNewBattery: Device disconnected.", exception);
+                  });
+                  myBatteryReceiver.startUpdateTask();
             }
 
             @Override
@@ -102,8 +97,8 @@ public class EchoController {
                   Log.d(Constants.ECHO_TAG, "onNewBattery: " + ev);
 
                   // Setup
-                  MyElectricVehicleReceiver myElectricVehicleReceiver = new MyElectricVehicleReceiver();
-                  myElectricVehicleReceiver.setContinuousTask(new TimerTask() {
+                  MyElectricVehicleReceiver myElectricVehicleReceiver = new MyElectricVehicleReceiver(ev);
+                  myElectricVehicleReceiver.setUpdateTask(new TimerTask() {
                         @Override
                         public void run() {
                               try {
@@ -123,18 +118,12 @@ public class EchoController {
                         }
                   });
                   ev.setReceiver(myElectricVehicleReceiver);
-                  myElectricVehicleReceiver.startContinuousTask();
 
                   // Fire signal to update information
-                  try {
-                        ev.get().reqGetOperationStatus().send();
-                        ev.get().reqGetOperationModeSetting().send();
-                        ev.get().reqGetMeasuredInstantaneousChargeDischargeElectricEnergy().send();
-                        ev.get().reqGetRemainingBatteryCapacity1().send(); // E2
-                        ev.get().reqGetRemainingBatteryCapacity3().send(); // E4
-                  } catch (IOException e) {
-                        Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected", e);
-                  }
+                  myElectricVehicleReceiver.update(exception -> {
+                        Log.e(Constants.ECHO_TAG, "onNewElectricVehicle: Device disconnected.", exception);
+                  });
+                  myElectricVehicleReceiver.startUpdateTask();
             }
 
             @Override
@@ -143,8 +132,8 @@ public class EchoController {
                   Log.d(Constants.ECHO_TAG, "onNewBattery: " + solar);
 
                   // Set up
-                  MySolarReceiver mySolarReceiver = new MySolarReceiver();
-                  mySolarReceiver.setContinuousTask(new TimerTask() {
+                  MySolarReceiver mySolarReceiver = new MySolarReceiver(solar);
+                  mySolarReceiver.setUpdateTask(new TimerTask() {
                         @Override
                         public void run() {
                               try {
@@ -157,15 +146,12 @@ public class EchoController {
                         }
                   });
                   solar.setReceiver(mySolarReceiver);
-                  mySolarReceiver.startContinuousTask();
+
                   // Fire signal to update information
-                  try {
-                        solar.get().reqGetOperationStatus().send();
-                        solar.get().reqGetMeasuredInstantaneousAmountOfElectricityGenerated().send();
-                        solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send(); // E1
-                  } catch (IOException e) {
-                        Log.e(Constants.ECHO_TAG, "Solar Adapter: Device Disconnected", e);
-                  }
+                  mySolarReceiver.update(exception -> {
+                        Log.e(Constants.ECHO_TAG, "onNewHouseholdSolarPowerGeneration: Device disconnected.", exception);
+                  });
+                  mySolarReceiver.startUpdateTask();
             }
 
             @Override
@@ -174,14 +160,13 @@ public class EchoController {
                   Log.d(Constants.ECHO_TAG, "onNewBattery: " + light);
 
                   // Set up
-                  light.setReceiver(new MyLightReceiver());
+                  MyLightReceiver myLightReceiver = new MyLightReceiver(light);
+                  light.setReceiver(myLightReceiver);
 
                   // Fire signal to update information
-                  try {
-                        light.get().reqGetOperationStatus().send();
-                  } catch (IOException e) {
-                        Log.e(Constants.ECHO_TAG, "Light Adapter: Device Disconnected", e);
-                  }
+                  myLightReceiver.update(exception -> {
+                        Log.e(Constants.ECHO_TAG, "onNewGeneralLighting: Device disconnected.", exception);
+                  });
             }
       };
 

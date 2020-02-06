@@ -1,0 +1,1 @@
+package Receiver.EPCGetter;public interface InstantaneousGettable {      int getInstantaneous();}

@@ -1,0 +1,1 @@
+package Receiver.EPCGetter;public interface CurrentPercentGettable {      int getPercentCurrent();}

@@ -10,37 +10,55 @@ import java.util.TimerTask;
 import Common.Constants;
 import Common.Convert;
 import Model.OperationStatus;
-
+import Receiver.Thread.ContinuouslyGotable;
+import Receiver.EPCGetter.CurrentElectricEnergyGettable;
+import Receiver.EPCGetter.InstantaneousGettable;
+import Receiver.Thread.OnException;
+import Receiver.OnGetSetListener.OnReceiveResultListener;
+import Receiver.EPCGetter.OperationStatusGettable;
+import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.Updatable;
 
 /**
  * @author hoang-trung-duc
  */
-public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver implements ResultControllable, ContinuouslyGotable {
+public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver implements
+          ResultControllable,
+          ContinuouslyGotable,
+          OperationStatusGettable,
+          InstantaneousGettable,
+          CurrentElectricEnergyGettable,
+          Updatable {
       private OperationStatus operationStatus;
       private int instantaneous, currentElectricEnergy;
       private OnReceiveResultListener OnSetEPC = null;
       private OnReceiveResultListener OnGetEPC = null;
       private Timer timer = new Timer();
       private TimerTask continuousTask;
+      private final HouseholdSolarPowerGeneration solar;
 
-      public void setContinuousTask(TimerTask continuousTask) {
+      public MySolarReceiver(HouseholdSolarPowerGeneration solar) {
+            this.solar = solar;
+      }
+
+      @Override
+      public void setUpdateTask(TimerTask continuousTask) {
             this.continuousTask = continuousTask;
       }
 
+      @Override
       public OperationStatus getOperationStatus() {
             return operationStatus;
       }
 
+      @Override
       public int getInstantaneous() {
             return instantaneous;
       }
 
+      @Override
       public int getCurrentElectricEnergy() {
             return currentElectricEnergy;
-      }
-
-      public OnReceiveResultListener getOnSetEPC() {
-            return OnSetEPC;
       }
 
       @Override
@@ -84,12 +102,28 @@ public class MySolarReceiver extends HouseholdSolarPowerGeneration.Receiver impl
       }
 
       @Override
-      public void startContinuousTask() {
+      public void startUpdateTask() {
             timer.schedule(continuousTask, 0, Constants.PERIOD);
       }
 
       @Override
-      public void stopContinuousTask() {
+      public void stopUpdateTask() {
             timer.cancel();
+      }
+
+      @Override
+      public void update(OnException onException) {
+            new Thread(new Runnable() {
+                  @Override
+                  public void run() {
+                        try {
+                              solar.get().reqGetOperationStatus().send();
+                              solar.get().reqGetMeasuredInstantaneousAmountOfElectricityGenerated().send();
+                              solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send(); // E1
+                        } catch (Exception e) {
+                              onException.handle(e);
+                        }
+                  }
+            }).start();
       }
 }

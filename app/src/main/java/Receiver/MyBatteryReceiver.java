@@ -11,11 +11,28 @@ import Common.Constants;
 import Common.Convert;
 import Model.OperationMode;
 import Model.OperationStatus;
+import Receiver.Thread.ContinuouslyGotable;
+import Receiver.EPCGetter.CurrentElectricEnergyGettable;
+import Receiver.EPCGetter.CurrentPercentGettable;
+import Receiver.EPCGetter.InstantaneousGettable;
+import Receiver.OnGetSetListener.OnReceiveResultListener;
+import Receiver.EPCGetter.OperationModeGettable;
+import Receiver.EPCGetter.OperationStatusGettable;
+import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.OnException;
+import Receiver.Thread.Updatable;
 
 /**
  * @author hoang-trung-duc
  */
-public class MyBatteryReceiver extends Battery.Receiver implements ResultControllable, ContinuouslyGotable {
+public class MyBatteryReceiver extends Battery.Receiver implements
+          ResultControllable,
+          ContinuouslyGotable,
+          OperationStatusGettable,
+          OperationModeGettable,
+          InstantaneousGettable,
+          CurrentElectricEnergyGettable,
+          CurrentPercentGettable, Updatable {
       private OperationStatus operationStatus;
       private OperationMode operationMode;
       private int instantaneous, currentElectricEnergy, percentCurrent;
@@ -23,27 +40,38 @@ public class MyBatteryReceiver extends Battery.Receiver implements ResultControl
       private OnReceiveResultListener OnGetEPC = null;
       private Timer timer = new Timer();
       private TimerTask continuousTask;
+      private final Battery battery;
 
-      public void setContinuousTask(TimerTask continuousTask) {
+      public MyBatteryReceiver(Battery battery) {
+            this.battery = battery;
+      }
+
+      @Override
+      public void setUpdateTask(TimerTask continuousTask) {
             this.continuousTask = continuousTask;
       }
 
+      @Override
       public OperationStatus getOperationStatus() {
             return operationStatus;
       }
 
+      @Override
       public OperationMode getOperationMode() {
             return operationMode;
       }
 
+      @Override
       public int getInstantaneous() {
             return instantaneous;
       }
 
+      @Override
       public int getCurrentElectricEnergy() {
             return currentElectricEnergy;
       }
 
+      @Override
       public int getPercentCurrent() {
             return percentCurrent;
       }
@@ -51,10 +79,6 @@ public class MyBatteryReceiver extends Battery.Receiver implements ResultControl
       @Override
       public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
-      }
-
-      public OnReceiveResultListener getOnSetEPC() {
-            return OnSetEPC;
       }
 
       @Override
@@ -106,12 +130,27 @@ public class MyBatteryReceiver extends Battery.Receiver implements ResultControl
       }
 
       @Override
-      public void startContinuousTask() {
+      public void startUpdateTask() {
             timer.schedule(continuousTask, 0, Constants.PERIOD);
       }
 
       @Override
-      public void stopContinuousTask() {
+      public void stopUpdateTask() {
             timer.cancel();
+      }
+
+      @Override
+      public void update(OnException onException) {
+            new Thread(() -> {
+                  try {
+                        battery.get().reqGetOperationStatus().send();
+                        battery.get().reqGetOperationModeSetting().send();
+                        battery.get().reqGetMeasuredInstantaneousChargeDischargeElectricEnergy().send();
+                        battery.get().reqGetRemainingStoredElectricity1().send(); // E2
+                        battery.get().reqGetRemainingStoredElectricity3().send(); // E4
+                  } catch (Exception e) {
+                        onException.handle(e);
+                  }
+            }).start();
       }
 }
