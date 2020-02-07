@@ -51,6 +51,8 @@
                   android:id="@+id/refresh"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
+                  android:paddingTop="@dimen/line_thick"
+                  android:paddingBottom="@dimen/line_thick"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toStartOf="parent"
