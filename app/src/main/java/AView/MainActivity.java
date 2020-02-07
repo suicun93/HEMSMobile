@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            // <editor-fold defaultstate="collapsed" desc="// Skip this">
+            // <editor-fold defaultState="collapsed" desc="// Skip this">
             //Full screen is set for the Window
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.activity_main);
