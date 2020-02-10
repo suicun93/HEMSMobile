@@ -2,13 +2,14 @@ package Receiver;
 
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
+import com.sonycsl.echo.eoj.device.DeviceObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.GeneralLighting;
 
 import Model.OperationStatus;
-import Receiver.Thread.OnException;
-import Receiver.OnGetSetListener.OnReceiveResultListener;
 import Receiver.EPCGetter.OperationStatusGettable;
+import Receiver.OnGetSetListener.OnReceiveResultListener;
 import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.OnException;
 import Receiver.Thread.Updatable;
 
 /**
@@ -30,6 +31,13 @@ public class MyLightReceiver extends GeneralLighting.Receiver implements
       @Override
       public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
+      }
+
+      @Override
+      public void disappear() {
+            if (OnGetEPC != null) {
+                  OnGetEPC.controlResult(false, new EchoProperty(DeviceObject.EPC_OPERATION_STATUS));
+            }
       }
 
       @Override

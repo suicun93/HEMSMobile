@@ -18,8 +18,8 @@ import java.nio.ByteOrder;
 
 import Common.Constants;
 import Main.EchoController;
-import Receiver.Thread.ContinuouslyGotable;
 import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.ContinuouslyGotable;
 
 /**
  * @author hoang-trung-duc
@@ -76,14 +76,17 @@ public class MyNodeProfileReceiver extends NodeProfile.Receiver {
                   EchoController.MY_ECHO_EVENT_LISTENER.getOnItemSetChangingListener().controlResult(false, new EchoProperty((byte) position));
 
             // Stop current thread
-            if (deviceObject.getReceiver() instanceof ContinuouslyGotable)
+            EchoObject.Receiver receiver = deviceObject.getReceiver();
+            if (receiver instanceof ContinuouslyGotable)
                   ((ContinuouslyGotable) deviceObject.getReceiver()).stopUpdateTask();
-            if (deviceObject.getReceiver() instanceof ResultControllable)
+            if (receiver instanceof ResultControllable &&
+                      ((ResultControllable) receiver).getOnGetListener() != null) {
+                  ((ResultControllable) receiver).disappear();
                   ((ResultControllable) deviceObject.getReceiver()).setOnReceiveListener(null, null);
+            }
 
             // Remove device from Node
-            EchoNode nodeTemp = deviceObject.getNode();
-            nodeTemp.removeDevice(deviceObject);
+            deviceObject.getNode().removeDevice(deviceObject);
             deviceObject.removeNode();
             EchoController.listDevice.remove(deviceObject);
             Log.d(Constants.ECHO_TAG, "onGetInstanceListNotification: " + "Removed: " + String.format("0x%04x", deviceObject.getEchoClassCode()));

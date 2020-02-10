@@ -2,6 +2,7 @@ package Receiver;
 
 import com.sonycsl.echo.EchoProperty;
 import com.sonycsl.echo.eoj.EchoObject;
+import com.sonycsl.echo.eoj.device.DeviceObject;
 import com.sonycsl.echo.eoj.device.housingfacilities.Battery;
 
 import java.util.Timer;
@@ -11,14 +12,14 @@ import Common.Constants;
 import Common.Convert;
 import Model.OperationMode;
 import Model.OperationStatus;
-import Receiver.Thread.ContinuouslyGotable;
 import Receiver.EPCGetter.CurrentElectricEnergyGettable;
 import Receiver.EPCGetter.CurrentPercentGettable;
 import Receiver.EPCGetter.InstantaneousGettable;
-import Receiver.OnGetSetListener.OnReceiveResultListener;
 import Receiver.EPCGetter.OperationModeGettable;
 import Receiver.EPCGetter.OperationStatusGettable;
+import Receiver.OnGetSetListener.OnReceiveResultListener;
 import Receiver.OnGetSetListener.ResultControllable;
+import Receiver.Thread.ContinuouslyGotable;
 import Receiver.Thread.OnException;
 import Receiver.Thread.Updatable;
 
@@ -79,6 +80,17 @@ public class MyBatteryReceiver extends Battery.Receiver implements
       @Override
       public OnReceiveResultListener getOnGetListener() {
             return OnGetEPC;
+      }
+
+      @Override
+      public void disappear() {
+            if (OnGetEPC != null) {
+                  OnGetEPC.controlResult(false, new EchoProperty(DeviceObject.EPC_OPERATION_STATUS));
+                  OnGetEPC.controlResult(false, new EchoProperty(Battery.EPC_OPERATION_MODE_SETTING));
+                  OnGetEPC.controlResult(false, new EchoProperty(Battery.EPC_MEASURED_INSTANTANEOUS_CHARGE_DISCHARGE_ELECTRIC_ENERGY));
+                  OnGetEPC.controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY3));
+                  OnGetEPC.controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY1));
+            }
       }
 
       @Override
