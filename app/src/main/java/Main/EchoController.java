@@ -69,14 +69,14 @@ public class EchoController {
                               try {
                                     battery.get().reqGetRemainingStoredElectricity1().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "onNewBattery: Device Disconnected" + e.getMessage());
                                     if (myBatteryReceiver.getOnGetListener() != null)
                                           myBatteryReceiver.getOnGetListener().controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY1));
                               }
                               try {
                                     battery.get().reqGetRemainingStoredElectricity3().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "Battery Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "onNewBattery: Device Disconnected" + e.getMessage());
                                     if (myBatteryReceiver.getOnGetListener() != null)
                                           myBatteryReceiver.getOnGetListener().controlResult(false, new EchoProperty(Battery.EPC_REMAINING_STORED_ELECTRICITY3));
                               }
@@ -94,7 +94,7 @@ public class EchoController {
             @Override
             public void onNewElectricVehicle(ElectricVehicle ev) {
                   super.onNewElectricVehicle(ev);
-                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + ev);
+                  Log.d(Constants.ECHO_TAG, "onNewElectricVehicle: " + ev);
 
                   // Setup
                   MyElectricVehicleReceiver myElectricVehicleReceiver = new MyElectricVehicleReceiver(ev);
@@ -104,14 +104,14 @@ public class EchoController {
                               try {
                                     ev.get().reqGetRemainingBatteryCapacity1().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "onNewElectricVehicle: Device Disconnected" + e.getMessage());
                                     if (myElectricVehicleReceiver.getOnGetListener() != null)
                                           myElectricVehicleReceiver.getOnGetListener().controlResult(false, new EchoProperty(ElectricVehicle.EPC_REMAINING_BATTERY_CAPACITY1));
                               }
                               try {
                                     ev.get().reqGetRemainingBatteryCapacity3().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "EV Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "onNewElectricVehicle: Device Disconnected" + e.getMessage());
                                     if (myElectricVehicleReceiver.getOnGetListener() != null)
                                           myElectricVehicleReceiver.getOnGetListener().controlResult(false, new EchoProperty(ElectricVehicle.EPC_REMAINING_BATTERY_CAPACITY3));
                               }
@@ -129,7 +129,7 @@ public class EchoController {
             @Override
             public void onNewHouseholdSolarPowerGeneration(HouseholdSolarPowerGeneration solar) {
                   super.onNewHouseholdSolarPowerGeneration(solar); //To change body of generated methods, choose Tools | Templates.
-                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + solar);
+                  Log.d(Constants.ECHO_TAG, "onNewHouseholdSolarPowerGeneration: " + solar);
 
                   // Set up
                   MySolarReceiver mySolarReceiver = new MySolarReceiver(solar);
@@ -139,7 +139,7 @@ public class EchoController {
                               try {
                                     solar.get().reqGetMeasuredCumulativeAmountOfElectricityGenerated().send();
                               } catch (Exception e) {
-                                    Log.e(Constants.ECHO_TAG, "Solar Adapter: Device Disconnected" + e.getMessage());
+                                    Log.e(Constants.ECHO_TAG, "onNewHouseholdSolarPowerGeneration: Device Disconnected" + e.getMessage());
                                     if (mySolarReceiver.getOnGetListener() != null)
                                           mySolarReceiver.getOnGetListener().controlResult(false, new EchoProperty(HouseholdSolarPowerGeneration.EPC_MEASURED_CUMULATIVE_AMOUNT_OF_ELECTRICITY_GENERATED));
                               }
@@ -157,7 +157,7 @@ public class EchoController {
             @Override
             public void onNewGeneralLighting(GeneralLighting light) {
                   super.onNewGeneralLighting(light); //To change body of generated methods, choose Tools | Templates.
-                  Log.d(Constants.ECHO_TAG, "onNewBattery: " + light);
+                  Log.d(Constants.ECHO_TAG, "onNewGeneralLighting: " + light);
 
                   // Set up
                   MyLightReceiver myLightReceiver = new MyLightReceiver(light);
